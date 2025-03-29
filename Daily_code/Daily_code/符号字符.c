@@ -24,22 +24,59 @@
 //	test3(arr);
 //	test5(arr2);
 //}
-#include <stdio.h>
-#include <string.h>
+//#include <stdio.h>
+//#include <string.h>
 
-int main() {
-    char str[] = "Hello,World!How,Are,You";
-    const char delimiters[] = ",!";
-    char* context = NULL;
-
-    // 首次调用
-    char* token = strtok_s(str, delimiters, &context);
-
-    while (token != NULL) {
-        printf("%s\n", token);
-        // 后续调用
-        token = strtok_s(NULL, delimiters, &context);
-    }
-
-    return 0;
-}
+//int main() {
+//    char str[] = "Hello,World!How,Are,You";
+//    const char delimiters[] = ",!";
+//    char* context = NULL;
+//
+//    // 首次调用
+//    char* token = strtok_s(str, delimiters, &context);
+//
+//    while (token != NULL) {
+//        printf("%s\n", token);
+//        // 后续调用
+//        token = strtok_s(NULL, delimiters, &context);
+//    }
+//
+//    return 0;
+//}
+//#include <iostream>
+//class Counter 
+//{
+//private:
+//    int value;
+//public:
+//    Counter(int v = 0) : value(v) {}
+//
+//    // 前置++运算符重载（返回引用，提高效率）
+//    Counter& operator++() {
+//        ++value;
+//        return *this;
+//    }
+//
+//    // 后置++运算符重载（返回值，需要创建临时对象）
+//    Counter operator++(int) {
+//        Counter temp = *this; // 复制当前对象
+//        ++value; // 自增
+//        return temp; // 返回旧值
+//    }
+//
+//    void display() const {
+//        std::cout << "Value: " << value << std::endl;
+//    }
+//};
+//
+//int main() {
+//    Counter c1(10);
+//
+//    std::cout << "前置++：" << std::endl;
+//    (++c1).display(); // 直接修改原对象
+//
+//    std::cout << "后置++：" << std::endl;
+//    (c1++).display(); // 返回原对象的副本
+//
+//    return 0;
+//}
