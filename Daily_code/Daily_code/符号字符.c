@@ -80,3 +80,22 @@
 //
 //    return 0;
 //}
+#include <iostream>
+
+class Base {
+public:
+    Base() { std::cout << "Base 构造\n"; }
+    virtual ~Base() { std::cout << "Base 析构\n"; } 
+};
+
+class Derived : public Base {
+public:
+    Derived() { std::cout << "Derived 构造\n"; }
+    ~Derived() { std::cout << "Derived 析构\n"; } // 现在会被正确调用
+};
+
+int main() {
+    Base* obj = new Derived();
+    delete obj; // 现在会正确调用 Derived 的析构函数
+    return 0;
+}
