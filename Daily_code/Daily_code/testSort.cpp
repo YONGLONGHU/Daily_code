@@ -72,37 +72,84 @@
 //
 //    return 0;
 //}
-#include <iostream>
-#include <string>
-#include <any>
-int main()
-{
-	{
-		std::any a = 10;
-		std::any b = 88.88;
-		std::any c = std::string("bitejiuyeke");
-		int* aa = std::any_cast<int>(&a);
-		std::cout << *aa << std::endl;
-		std::cout << *std::any_cast<double>(&b) << std::endl;
-		std::cout << *std::any_cast<std::string>(&c) << std::endl;
-	}
-	{
-		Test d("Leihou");
-		std::any any_d = d;
-		std::any any_e(d);
-		std::any any_f(any_d);
-		std::any any_g = any_d;
-	}
-	{
-		std::cout << "---------------any之间相互的赋-----\n";
-		std::any any_f;
-		any_f = 33;
-		std::cout << *std::any_cast<int>(&any_f) << std::endl;
-		std::string c = "Hello World";
-		any_f = c;
-		std::cout << *std::any_cast<std::string>(&any_f) << std::endl;
-		any_f = std::any(Test("test"));
-		std::cout << std::any_cast<Test>(&any_f)->_data << std::endl;
-	}
-	return 0;
-}
+//#include <iostream>
+//#include <string>
+//#include <any>
+//int main()
+//{
+//	{
+//		std::any a = 10;
+//		std::any b = 88.88;
+//		std::any c = std::string("bitejiuyeke");
+//		int* aa = std::any_cast<int>(&a);
+//		std::cout << *aa << std::endl;
+//		std::cout << *std::any_cast<double>(&b) << std::endl;
+//		std::cout << *std::any_cast<std::string>(&c) << std::endl;
+//	}
+//	{
+//		Test d("Leihou");
+//		std::any any_d = d;
+//		std::any any_e(d);
+//		std::any any_f(any_d);
+//		std::any any_g = any_d;
+//	}
+//	{
+//		std::cout << "---------------any之间相互的赋-----\n";
+//		std::any any_f;
+//		any_f = 33;
+//		std::cout << *std::any_cast<int>(&any_f) << std::endl;
+//		std::string c = "Hello World";
+//		any_f = c;
+//		std::cout << *std::any_cast<std::string>(&any_f) << std::endl;
+//		any_f = std::any(Test("test"));
+//		std::cout << std::any_cast<Test>(&any_f)->_data << std::endl;
+//	}
+//	return 0;
+//}
+//#include <iostream>
+//#include <unordered_set>
+//#include <string>
+//using namespace std;
+//
+//// 判断是否为质数
+//bool isPrime(int n) {
+//    if (n < 2) return false;
+//    for (int i = 2; i * i <= n; i++) {
+//        if (n % i == 0) return false;
+//    }
+//    return true;
+//}
+//
+//// 递归枚举所有可能的表达式
+//void dfs(const string& s, int index, int currentSum, unordered_set<int>& primes) {
+//    if (index == s.length()) {
+//        if (isPrime(currentSum)) {
+//            primes.insert(currentSum);
+//        }
+//        return;
+//    }
+//
+//    int num = 0;
+//    for (int i = index; i < s.length(); i++) {
+//        num = num * 10 + (s[i] - '0');
+//        if (index == 0) {
+//            dfs(s, i + 1, num, primes);
+//        }
+//        else {
+//            dfs(s, i + 1, currentSum + num, primes);
+//        }
+//    }
+//}
+//
+//int countPrimeExpressions(string s) {
+//    unordered_set<int> primes;
+//    dfs(s, 0, 0, primes);
+//    return primes.size();
+//}
+//
+//int main() {
+//    string s;
+//    cin >> s;
+//    cout << countPrimeExpressions(s) << endl;
+//    return 0;
+//}
