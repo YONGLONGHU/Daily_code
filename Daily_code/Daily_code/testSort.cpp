@@ -153,3 +153,47 @@
 //    cout << countPrimeExpressions(s) << endl;
 //    return 0;
 //}
+
+#include<iostream>
+//typedef int(*FunType)(int, int);
+//int add(int v1, int v2) {
+//	return v1 + v2;
+//}
+//void testFuncPointer(FunType func1, int val1, int val2)
+//{
+//	if (func1 != nullptr)
+//	{
+//		int result = func1(val1, val2);
+//		std::cout << "TestFuncpointer: " << result << std::endl;
+//	}
+//	FunType func2 = add;
+//	testFuncPointer(func2, 10, 20);
+//}
+
+
+//auto Add = [](int a, int b)
+//{
+//	std::cout << "sum = " << a + b;
+//}
+//Add(100, 200);
+//仿函数
+//class Functor1 {
+//public:
+//    void operator()(const std::string& str) {
+//        mStr += str;
+//        printf("Functor1::operator() >> %s\n", str.c_str());
+//    }
+//    std::string mStr;
+//};
+//
+//Functor1 f;
+//f("hello functor");
+//f(" test ");
+//bind()函数
+//auto addFunc2 = std::bind(&add, 15, std::placeholders::_1);
+////等价于
+//// std::function<int(int)> addFunc2 = std::bind(&add, 15, std::placeholders::_1);
+//printf("addFunc2 >> %d\n", addFunc2(5));
+
+//std::function<void(int)>f_printnum = print_num;
+//print_num(-100);
