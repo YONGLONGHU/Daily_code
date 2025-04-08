@@ -198,54 +198,85 @@
 //std::function<void(int)>f_printnum = print_num;
 //print_num(-100);
 
-class Any {
-private:
-    class holder {
-    public:
-        virtual ~holder() {}
-        virtual const std::type_info& type() = 0;
-        virtual holder* clone() = 0;
-    };
-    template<class T>
-    class placeholder : public holder {
-    public:
-        placeholder(const T& val) : _val(val) {}
-        // 获取子类对象保存的数据类型
-        virtual const std::type_info& type() { return typeid(T); }
-        // 针对当前的对象自身，克隆出一个新的子类对象
-        virtual holder* clone() { return new placeholder(_val); }
-    public:
-        T _val;
-    };
-    holder* _content;
-public:
-    Any() :_content(NULL) {}
-    template<class T>
-    Any(const T& val) : _content(new placeholder<T>(val)) {}
-    Any(const Any& other) :_content(other._content ? other._content->clone() : NULL) {}
-    ~Any() { delete _content; }
+//class Any {
+//private:
+//    class holder {
+//    public:
+//        virtual ~holder() {}
+//        virtual const std::type_info& type() = 0;
+//        virtual holder* clone() = 0;
+//    };
+//    template<class T>
+//    class placeholder : public holder {
+//    public:
+//        placeholder(const T& val) : _val(val) {}
+//        // 获取子类对象保存的数据类型
+//        virtual const std::type_info& type() { return typeid(T); }
+//        // 针对当前的对象自身，克隆出一个新的子类对象
+//        virtual holder* clone() { return new placeholder(_val); }
+//    public:
+//        T _val;
+//    };
+//    holder* _content;
+//public:
+//    Any() :_content(NULL) {}
+//    template<class T>
+//    Any(const T& val) : _content(new placeholder<T>(val)) {}
+//    Any(const Any& other) :_content(other._content ? other._content->clone() : NULL) {}
+//    ~Any() { delete _content; }
+//
+//    Any& swap(Any& other) {
+//        std::swap(_content, other._content);
+//        return *this;
+//    }
+//
+//    // 返回子类对象保存的数据的指针
+//    template<class T>
+//    T* get() {
+//        //想要获取的数据类型，必须和保存的数据类型一致
+//        assert(typeid(T) == _content->type());
+//        return &((placeholder<T>*)_content)->_val;
+//    }
+//    //赋值运算符的重载函数
+//    template<class T>
+//    Any& operator=(const T& val) {
+//        //为val构造一个临时的通用容器，然后与当前容器自身进行指针交换，临时对象释放的时候，原先保存的数据也就被释放
+//        Any(val).swap(*this);
+//        return *this;
+//    }
+//    Any& operator=(const Any& other) {
+//        Any(other).swap(*this);
+//        return *this;
+//    }
+//};
 
-    Any& swap(Any& other) {
-        std::swap(_content, other._content);
-        return *this;
+int main(int argc, char* argv[]) {
+    structepoll_eventev, events[MAX_EVENTS];
+    int sock_fd, ret = 0;
+    int efd = epoll_create(10); //创建epoll实例
+    ev.data.fd = sock_fd;
+    ev.events = EPOLLIN;    //注册监听套接字事件
+    epoll_ctl(efd, EPOLL_CTL_ADD, sock_fd, &ev);
+    while (1) {
+        //超时1000毫秒，获取就绪事件
+        int nfds = epoll_wait(efd, events, MAX_EVENTS, 1000);
+        if (nfds == -1) return-1; //获取失败退出
+        elseif(nfds == 0) continue; //超时，继续下一轮事件获取
+        for (int i = 0; i < nfds; i++) {//轮询就绪事件数组
+            int fd = events[i].data.fd;
+            if (fd == sock_fd) { //监听套接字
+                new_fd = accept(sock_fd, (struct sockaddr*)&peer, &addrlen);
+                setnonblocking(new_fd); //设置新套接字为非阻塞模式
+                ev.data.fd = new_fd;
+                ev.events = EPOLLIN | EPOLLET;                //添加新套接字
+                epoll_ctl(efd, EPOLL_CTL_ADD, new_fd, &ev);
+            }
+            else { //业务套接字
+                if (events[i].events & EPOLLIN) { //EPOLLIN事件
+                    recv(fd, recv_buf, len, 0); //业务套接字接收数据
+                }
+            }
+        }
     }
-
-    // 返回子类对象保存的数据的指针
-    template<class T>
-    T* get() {
-        //想要获取的数据类型，必须和保存的数据类型一致
-        assert(typeid(T) == _content->type());
-        return &((placeholder<T>*)_content)->_val;
-    }
-    //赋值运算符的重载函数
-    template<class T>
-    Any& operator=(const T& val) {
-        //为val构造一个临时的通用容器，然后与当前容器自身进行指针交换，临时对象释放的时候，原先保存的数据也就被释放
-        Any(val).swap(*this);
-        return *this;
-    }
-    Any& operator=(const Any& other) {
-        Any(other).swap(*this);
-        return *this;
-    }
-};
+    return0;
+}
