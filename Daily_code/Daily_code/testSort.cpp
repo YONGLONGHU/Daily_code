@@ -250,33 +250,153 @@
 //    }
 //};
 
-int main(int argc, char* argv[]) {
-    structepoll_eventev, events[MAX_EVENTS];
-    int sock_fd, ret = 0;
-    int efd = epoll_create(10); //创建epoll实例
-    ev.data.fd = sock_fd;
-    ev.events = EPOLLIN;    //注册监听套接字事件
-    epoll_ctl(efd, EPOLL_CTL_ADD, sock_fd, &ev);
-    while (1) {
-        //超时1000毫秒，获取就绪事件
-        int nfds = epoll_wait(efd, events, MAX_EVENTS, 1000);
-        if (nfds == -1) return-1; //获取失败退出
-        elseif(nfds == 0) continue; //超时，继续下一轮事件获取
-        for (int i = 0; i < nfds; i++) {//轮询就绪事件数组
-            int fd = events[i].data.fd;
-            if (fd == sock_fd) { //监听套接字
-                new_fd = accept(sock_fd, (struct sockaddr*)&peer, &addrlen);
-                setnonblocking(new_fd); //设置新套接字为非阻塞模式
-                ev.data.fd = new_fd;
-                ev.events = EPOLLIN | EPOLLET;                //添加新套接字
-                epoll_ctl(efd, EPOLL_CTL_ADD, new_fd, &ev);
-            }
-            else { //业务套接字
-                if (events[i].events & EPOLLIN) { //EPOLLIN事件
-                    recv(fd, recv_buf, len, 0); //业务套接字接收数据
-                }
-            }
-        }
+//#include <sys/epoll.h>
+//#include <sys/socket.h>
+//#include <fcntl.h>
+//#include <unistd.h>
+//#include <string.h>
+//#include <errno.h>
+//#include <stdio.h>
+//
+//#define MAX_EVENTS 1024
+//#define BUFFER_SIZE 4096
+//
+//// 设置文件描述符为非阻塞模式
+//static void setnonblocking(int fd) {
+//    int flags = fcntl(fd, F_GETFL, 0);
+//    if (flags == -1) {
+//        perror("fcntl(F_GETFL)");
+//        return;
+//    }
+//    if (fcntl(fd, F_SETFL, flags | O_NONBLOCK) == -1) {
+//        perror("fcntl(F_SETFL)");
+//    }
+//}
+//
+//int main(int argc, char* argv[]) {
+//    struct epoll_event ev, events[MAX_EVENTS];
+//    int sock_fd, new_fd, efd, ret;
+//    struct sockaddr_in peer;
+//    socklen_t addrlen = sizeof(peer);
+//    char recv_buf[BUFFER_SIZE];
+//
+//    // 1. 创建监听套接字 (这里省略了socket/bind/listen过程，实际需要补全)
+//    sock_fd = socket(AF_INET, SOCK_STREAM, 0);
+//    if (sock_fd == -1) {
+//        perror("socket");
+//        return -1;
+//    }
+//
+//    // 2. 创建epoll实例
+//    efd = epoll_create1(0);  // 更推荐使用epoll_create1(0)替代epoll_create
+//    if (efd == -1) {
+//        perror("epoll_create1");
+//        close(sock_fd);
+//        return -1;
+//    }
+//
+//    // 3. 添加监听套接字到epoll
+//    ev.events = EPOLLIN;     // 监听可读事件（新连接）
+//    ev.data.fd = sock_fd;
+//    if (epoll_ctl(efd, EPOLL_CTL_ADD, sock_fd, &ev) == -1) {
+//        perror("epoll_ctl(ADD)");
+//        close(sock_fd);
+//        close(efd);
+//        return -1;
+//    }
+//
+//    while (1) {
+//        // 4. 等待事件发生（超时1000毫秒）
+//        int nfds = epoll_wait(efd, events, MAX_EVENTS, 1000);
+//        if (nfds == -1) {
+//            if (errno == EINTR) continue;  // 被信号中断则重试
+//            perror("epoll_wait");
+//            break;
+//        }
+//        else if (nfds == 0) {
+//            // printf("Timeout, no events\n"); // 可添加超时处理逻辑
+//            continue;
+//        }
+//
+//        for (int i = 0; i < nfds; i++) {
+//            int fd = events[i].data.fd;
+//
+//            // 5. 处理监听套接字事件（新连接）
+//            if (fd == sock_fd) {
+//                new_fd = accept(sock_fd, (struct sockaddr*)&peer, &addrlen);
+//                if (new_fd == -1) {
+//                    if (errno != EAGAIN && errno != EWOULDBLOCK) {
+//                        perror("accept");
+//                    }
+//                    continue;
+//                }
+//
+//                setnonblocking(new_fd);  // 设置为非阻塞模式
+//
+//                // 为新连接注册EPOLLIN|EPOLLET事件（边缘触发模式）
+//                ev.events = EPOLLIN | EPOLLET | EPOLLRDHUP;  // 添加EPOLLRDHUP检测连接关闭
+//                ev.data.fd = new_fd;
+//                if (epoll_ctl(efd, EPOLL_CTL_ADD, new_fd, &ev) == -1) {
+//                    perror("epoll_ctl(ADD new_fd)");
+//                    close(new_fd);
+//                }
+//            }
+//            // 6. 处理业务套接字事件
+//            else {
+//                // 6.1 处理连接关闭或错误事件
+//                if (events[i].events & (EPOLLERR | EPOLLHUP | EPOLLRDHUP)) {
+//                    printf("Connection closed or error on fd %d\n", fd);
+//                    epoll_ctl(efd, EPOLL_CTL_DEL, fd, NULL);
+//                    close(fd);
+//                    continue;
+//                }
+//
+//                // 6.2 处理可读事件
+//                if (events[i].events & EPOLLIN) {
+//                    ssize_t count;
+//                    // 非阻塞读取（边缘触发模式必须循环读取直到EAGAIN）
+//                    while ((count = recv(fd, recv_buf, BUFFER_SIZE, 0)) > 0) {
+//                        // 处理接收到的数据（示例：原样回显）
+//                        send(fd, recv_buf, count, MSG_NOSIGNAL);
+//                    }
+//
+//                    if (count == 0) {  // 对端关闭连接
+//                        printf("Connection closed by peer on fd %d\n", fd);
+//                        epoll_ctl(efd, EPOLL_CTL_DEL, fd, NULL);
+//                        close(fd);
+//                    }
+//                    else if (count == -1 && errno != EAGAIN) {
+//                        perror("recv");
+//                        epoll_ctl(efd, EPOLL_CTL_DEL, fd, NULL);
+//                        close(fd);
+//                    }
+//                }
+//            }
+//        }
+//    }
+//
+//    // 7. 清理资源
+//    close(sock_fd);
+//    close(efd);
+//    return 0;
+//}
+using TaskFunc = std::function<void()>;
+using ReleaseFunc = std::function<void()>;
+class TimerTask {
+private:
+    uint64_t _id;       // 定时器任务对象ID
+    uint32_t _timeout;  //定时任务的超时时间
+    bool _canceled;     // false-表示没有被取消， true-表示被取消
+    TaskFunc _task_cb;  //定时器对象要执行的定时任务
+    ReleaseFunc _release; //用于删除TimerWheel中保存的定时器对象信息
+public:
+    TimerTask(uint64_t id, uint32_t delay, const TaskFunc& cb) :
+        _id(id), _timeout(delay), _task_cb(cb), _canceled(false) {}
+    ~TimerTask() {
+        if (_canceled == false) _task_cb();
+        _release();
     }
-    return0;
-}
+    void Cancel() { _canceled = true; }
+    void SetRelease(const ReleaseFunc& cb) { _release = cb; }
+    uint32_t DelayTime() { return _timeout; }
+};
