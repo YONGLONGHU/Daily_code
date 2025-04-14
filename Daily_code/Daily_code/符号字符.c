@@ -100,23 +100,55 @@
 //    return 0;
 //}
 
-using TaskFunc = std::function<void()>;
-using ReleaseFunc = std::function<void()>;
-class TimerTask {
+//using TaskFunc = std::function<void()>;
+//using ReleaseFunc = std::function<void()>;
+//class TimerTask {
+//private:
+//    uint64_t _id;       // 定时器任务对象ID
+//    uint32_t _timeout;  //定时任务的超时时间
+//    bool _canceled;     // false-表示没有被取消， true-表示被取消
+//    TaskFunc _task_cb;  //定时器对象要执行的定时任务
+//    ReleaseFunc _release; //用于删除TimerWheel中保存的定时器对象信息
+//public:
+//    TimerTask(uint64_t id, uint32_t delay, const TaskFunc& cb) :
+//        _id(id), _timeout(delay), _task_cb(cb), _canceled(false) {}
+//    ~TimerTask() {
+//        if (_canceled == false) _task_cb();
+//        _release();
+//    }
+//    void Cancel() { _canceled = true; }
+//    void SetRelease(const ReleaseFunc& cb) { _release = cb; }
+//    uint32_t DelayTime() { return _timeout; }
+//};
+class LoopThread {
 private:
-    uint64_t _id;       // 定时器任务对象ID
-    uint32_t _timeout;  //定时任务的超时时间
-    bool _canceled;     // false-表示没有被取消， true-表示被取消
-    TaskFunc _task_cb;  //定时器对象要执行的定时任务
-    ReleaseFunc _release; //用于删除TimerWheel中保存的定时器对象信息
-public:
-    TimerTask(uint64_t id, uint32_t delay, const TaskFunc& cb) :
-        _id(id), _timeout(delay), _task_cb(cb), _canceled(false) {}
-    ~TimerTask() {
-        if (_canceled == false) _task_cb();
-        _release();
+    /*用于实现_loop获取的同步关系，避免线程创建了，但是_loop还没有实例化之前去获取_loop*/
+    std::mutex _mutex;          // 互斥锁
+    std::condition_variable _cond;   // 条件变量
+    EventLoop* _loop;       // EventLoop指针变量，这个对象需要在线程内实例化
+    std::thread _thread;    // EventLoop对应的线程
+private:
+    /*实例化 EventLoop 对象，唤醒_cond上有可能阻塞的线程，并且开始运行EventLoop模块的功能*/
+    void ThreadEntry() {
+        EventLoop loop;
+        {
+            std::unique_lock<std::mutex> lock(_mutex);//加锁
+            _loop = &loop;
+            _cond.notify_all();
+        }
+        loop.Start();
     }
-    void Cancel() { _canceled = true; }
-    void SetRelease(const ReleaseFunc& cb) { _release = cb; }
-    uint32_t DelayTime() { return _timeout; }
+public:
+    /*创建线程，设定线程入口函数*/
+    LoopThread() :_loop(NULL), _thread(std::thread(&LoopThread::ThreadEntry, this)) {}
+    /*返回当前线程关联的EventLoop对象指针*/
+    EventLoop* GetLoop() {
+        EventLoop* loop = NULL;
+        {
+            std::unique_lock<std::mutex> lock(_mutex);//加锁
+            _cond.wait(lock, [&]() { return _loop != NULL; });//loop为NULL就一直阻塞
+            loop = _loop;
+        }
+        return loop;
+    }
 };
