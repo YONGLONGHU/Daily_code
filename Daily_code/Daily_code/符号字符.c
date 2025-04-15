@@ -153,14 +153,133 @@
 //    }
 //};
 
-struct epoll_event {
-    uint32_t events;    // Epoll 事件
-    epoll_data_t data;  // 用户数据
-};
+//struct epoll_event {
+//    uint32_t events;    // Epoll 事件
+//    epoll_data_t data;  // 用户数据
+//};
+//
+//typedef union epoll_data {
+//    void* ptr;
+//    int fd;
+//    uint32_t u32;
+//    uint64_t u64;
+//} epoll_data_t;
 
-typedef union epoll_data {
-    void* ptr;
-    int fd;
-    uint32_t u32;
-    uint64_t u64;
-} epoll_data_t;
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <sys/epoll.h>
+#include <fcntl.h>
+
+#define MAX_EVENTS 10
+#define PORT 8080
+
+void setnonblocking(int sockfd) {
+    int flags = fcntl(sockfd, F_GETFL, 0);
+    fcntl(sockfd, F_SETFL, flags | O_NONBLOCK);
+}
+
+int main() {
+    int listen_sock, conn_sock, nfds, epollfd;
+    struct sockaddr_in server_addr, client_addr;
+    socklen_t client_len = sizeof(client_addr);
+    struct epoll_event ev, events[MAX_EVENTS];
+    char buffer[1024];
+
+    // 创建监听套接字
+    listen_sock = socket(AF_INET, SOCK_STREAM, 0);
+    if (listen_sock == -1) {
+        perror("socket");
+        exit(EXIT_FAILURE);
+    }
+
+    // 设置地址重用
+    int opt = 1;
+    setsockopt(listen_sock, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+
+    // 绑定地址
+    memset(&server_addr, 0, sizeof(server_addr));
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_addr.s_addr = INADDR_ANY;
+    server_addr.sin_port = htons(PORT);
+
+    if (bind(listen_sock, (struct sockaddr*)&server_addr, sizeof(server_addr)) == -1) {
+        perror("bind");
+        exit(EXIT_FAILURE);
+    }
+
+    // 监听
+    if (listen(listen_sock, SOMAXCONN) == -1) {
+        perror("listen");
+        exit(EXIT_FAILURE);
+    }
+
+    // 创建 epoll 实例
+    epollfd = epoll_create1(0);
+    if (epollfd == -1) {
+        perror("epoll_create1");
+        exit(EXIT_FAILURE);
+    }
+
+    // 添加监听套接字到 epoll
+    ev.events = EPOLLIN;
+    ev.data.fd = listen_sock;
+    if (epoll_ctl(epollfd, EPOLL_CTL_ADD, listen_sock, &ev) == -1) {
+        perror("epoll_ctl: listen_sock");
+        exit(EXIT_FAILURE);
+    }
+
+    // 事件循环
+    for (;;) {
+        nfds = epoll_wait(epollfd, events, MAX_EVENTS, -1);
+        if (nfds == -1) {
+            perror("epoll_wait");
+            exit(EXIT_FAILURE);
+        }
+
+        for (int n = 0; n < nfds; ++n) {
+            if (events[n].data.fd == listen_sock) {
+                // 新连接
+                conn_sock = accept(listen_sock,
+                    (struct sockaddr*)&client_addr,
+                    &client_len);
+                if (conn_sock == -1) {
+                    perror("accept");
+                    continue;
+                }
+
+                setnonblocking(conn_sock);
+                ev.events = EPOLLIN | EPOLLET;  // 边缘触发模式
+                ev.data.fd = conn_sock;
+                if (epoll_ctl(epollfd, EPOLL_CTL_ADD, conn_sock, &ev) == -1) {
+                    perror("epoll_ctl: conn_sock");
+                    close(conn_sock);
+                }
+            }
+            else {
+                // 已连接套接字有数据可读
+                int fd = events[n].data.fd;
+                ssize_t count;
+
+                while ((count = read(fd, buffer, sizeof(buffer))) > 0) {
+                    // 处理数据
+                    write(STDOUT_FILENO, buffer, count);
+
+                    // 简单回显
+                    write(fd, buffer, count);
+                }
+
+                if (count == 0 || (count == -1 && errno != EAGAIN)) {
+                    // 连接关闭或出错
+                    close(fd);
+                }
+            }
+        }
+    }
+
+    close(listen_sock);
+    return 0;
+}
