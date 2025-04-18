@@ -355,23 +355,23 @@
 //    }
 //    void Start() { _pool.Create();  _baseloop.Start(); }
 //};
-class Solution {
-public:
-    vector<vector<string>> groupAnagrams(vector<string>& strs)
-    {
-        unordered_map<string, vector<string>> mp;
-        for (const string& str : strs)  // 使用 const string&
-        {
-            string key = str;
-            sort(key.begin(), key.end());
-            mp[key].push_back(str);
-        }
-
-        vector<vector<string>> ans;
-        for (auto& pair : mp)  // 使用范围-based for 循环
-        {
-            ans.push_back(pair.second);
-        }
-        return ans;
-    }
-};
+//class Solution {
+//public:
+//    vector<vector<string>> groupAnagrams(vector<string>& strs)
+//    {
+//        unordered_map<string, vector<string>> mp;
+//        for (const string& str : strs)  // 使用 const string&
+//        {
+//            string key = str;
+//            sort(key.begin(), key.end());
+//            mp[key].push_back(str);
+//        }
+//
+//        vector<vector<string>> ans;
+//        for (auto& pair : mp)  // 使用范围-based for 循环
+//        {
+//            ans.push_back(pair.second);
+//        }
+//        return ans;
+//    }
+//};
