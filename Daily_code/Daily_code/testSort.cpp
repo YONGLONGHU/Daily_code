@@ -424,3 +424,41 @@
 //		return reval;
 //	}
 //};
+
+#include <iostream>
+#include <vector>
+#include <string>
+using namespace std;
+
+// 删除指定的子串，O(n)时间，O(1)空间
+void removeSubstrings(string& s, const vector<string>& removeList) {
+    int n = s.size();
+    int slow = 0, fast = 0;
+
+    while (fast < n) {
+        bool matched = false;
+        for (const string& word : removeList) {
+            int len = word.size();
+            if (fast + len <= n && s.substr(fast, len) == word) {
+                fast += len; // 匹配到某个子串，直接跳过
+                matched = true;
+                break;
+            }
+        }
+        if (!matched) {
+            s[slow++] = s[fast++];
+        }
+    }
+    s.resize(slow); // 截断字符串
+}
+
+int main() {
+    string s;
+    cin >> s;
+    vector<string> removeList = { "abc", "de", "f" }; // 要删除的子串集合
+
+    removeSubstrings(s, removeList);
+
+    cout << s << endl;
+    return 0;
+}
