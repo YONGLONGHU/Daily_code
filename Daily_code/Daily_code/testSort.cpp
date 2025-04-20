@@ -425,40 +425,155 @@
 //	}
 //};
 
+//#include <iostream>
+//#include <vector>
+//#include <string>
+//using namespace std;
+//
+//// 删除指定的子串，O(n)时间，O(1)空间
+//void removeSubstrings(string& s, const vector<string>& removeList) {
+//    int n = s.size();
+//    int slow = 0, fast = 0;
+//
+//    while (fast < n) {
+//        bool matched = false;
+//        for (const string& word : removeList) {
+//            int len = word.size();
+//            if (fast + len <= n && s.substr(fast, len) == word) {
+//                fast += len; // 匹配到某个子串，直接跳过
+//                matched = true;
+//                break;
+//            }
+//        }
+//        if (!matched) {
+//            s[slow++] = s[fast++];
+//        }
+//    }
+//    s.resize(slow); // 截断字符串
+//}
+//
+//int main() {
+//    string s;
+//    cin >> s;
+//    vector<string> removeList = { "abc", "de", "f" }; // 要删除的子串集合
+//
+//    removeSubstrings(s, removeList);
+//
+//    cout << s << endl;
+//    return 0;
+//}
 #include <iostream>
+#include <fstream>
+#include <unordered_map>
+#include <queue>
 #include <vector>
 #include <string>
 using namespace std;
 
-// 删除指定的子串，O(n)时间，O(1)空间
-void removeSubstrings(string& s, const vector<string>& removeList) {
-    int n = s.size();
-    int slow = 0, fast = 0;
+const int BUCKETS = 100; // 分成100个小桶
+const string BUCKET_PREFIX = "bucket_"; // 桶文件名前缀
 
-    while (fast < n) {
-        bool matched = false;
-        for (const string& word : removeList) {
-            int len = word.size();
-            if (fast + len <= n && s.substr(fast, len) == word) {
-                fast += len; // 匹配到某个子串，直接跳过
-                matched = true;
-                break;
-            }
-        }
-        if (!matched) {
-            s[slow++] = s[fast++];
+// 小根堆元素
+struct IpCount {
+    string ip;
+    int count;
+    bool operator<(const IpCount& other) const {
+        return count > other.count; // 注意：count小的在堆顶（小根堆）
+    }
+};
+
+// 第一步：把IP按哈希分桶
+void splitIntoBuckets(const string& inputFile) {
+    ifstream fin(inputFile);
+    if (!fin.is_open()) {
+        cerr << "无法打开文件" << endl;
+        return;
+    }
+
+    ofstream buckets[BUCKETS];
+    for (int i = 0; i < BUCKETS; ++i) {
+        buckets[i].open(BUCKET_PREFIX + to_string(i) + ".txt");
+    }
+
+    string ip;
+    while (fin >> ip) {
+        int hashVal = hash<string>{}(ip) % BUCKETS;
+        buckets[hashVal] << ip << '\n';
+    }
+
+    fin.close();
+    for (int i = 0; i < BUCKETS; ++i) {
+        buckets[i].close();
+    }
+}
+
+// 第二步：在每个桶里找Top10
+vector<IpCount> processBucket(const string& bucketFile) {
+    ifstream fin(bucketFile);
+    unordered_map<string, int> freq;
+    string ip;
+    while (fin >> ip) {
+        freq[ip]++;
+    }
+    fin.close();
+
+    priority_queue<IpCount> minHeap;
+    for (auto& [ip, count] : freq) {
+        minHeap.push({ ip, count });
+        if (minHeap.size() > 10) {
+            minHeap.pop();
         }
     }
-    s.resize(slow); // 截断字符串
+
+    vector<IpCount> top10;
+    while (!minHeap.empty()) {
+        top10.push_back(minHeap.top());
+        minHeap.pop();
+    }
+    return top10;
+}
+
+// 第三步：合并所有桶的Top10
+vector<IpCount> mergeAllTop10(const vector<vector<IpCount>>& allTop10) {
+    priority_queue<IpCount> minHeap;
+    for (const auto& bucketTop : allTop10) {
+        for (const auto& ipcount : bucketTop) {
+            minHeap.push(ipcount);
+            if (minHeap.size() > 10) {
+                minHeap.pop();
+            }
+        }
+    }
+
+    vector<IpCount> finalTop10;
+    while (!minHeap.empty()) {
+        finalTop10.push_back(minHeap.top());
+        minHeap.pop();
+    }
+    return finalTop10;
 }
 
 int main() {
-    string s;
-    cin >> s;
-    vector<string> removeList = { "abc", "de", "f" }; // 要删除的子串集合
+    string inputFile = "ip.txt"; // 假设所有IP存这个文件里
 
-    removeSubstrings(s, removeList);
+    // 第一步：分桶
+    splitIntoBuckets(inputFile);
 
-    cout << s << endl;
+    // 第二步：每个桶内部Top10
+    vector<vector<IpCount>> allTop10;
+    for (int i = 0; i < BUCKETS; ++i) {
+        string bucketFile = BUCKET_PREFIX + to_string(i) + ".txt";
+        allTop10.push_back(processBucket(bucketFile));
+    }
+
+    // 第三步：全局合并Top10
+    vector<IpCount> finalTop10 = mergeAllTop10(allTop10);
+
+    // 输出最终Top10
+    cout << "出现次数最多的10个IP是：" << endl;
+    for (auto it = finalTop10.rbegin(); it != finalTop10.rend(); ++it) {
+        cout << it->ip << " 出现了 " << it->count << " 次" << endl;
+    }
+
     return 0;
 }
