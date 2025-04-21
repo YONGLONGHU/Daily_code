@@ -462,118 +462,213 @@
 //    cout << s << endl;
 //    return 0;
 //}
+//#include <iostream>
+//#include <fstream>
+//#include <unordered_map>
+//#include <queue>
+//#include <vector>
+//#include <string>
+//using namespace std;
+//
+//const int BUCKETS = 100; // 分成100个小桶
+//const string BUCKET_PREFIX = "bucket_"; // 桶文件名前缀
+//
+//// 小根堆元素
+//struct IpCount {
+//    string ip;
+//    int count;
+//    bool operator<(const IpCount& other) const {
+//        return count > other.count; // 注意：count小的在堆顶（小根堆）
+//    }
+//};
+//
+//// 第一步：把IP按哈希分桶
+//void splitIntoBuckets(const string& inputFile) {
+//    ifstream fin(inputFile);
+//    if (!fin.is_open()) {
+//        cerr << "无法打开文件" << endl;
+//        return;
+//    }
+//
+//    ofstream buckets[BUCKETS];
+//    for (int i = 0; i < BUCKETS; ++i) {
+//        buckets[i].open(BUCKET_PREFIX + to_string(i) + ".txt");
+//    }
+//
+//    string ip;
+//    while (fin >> ip) {
+//        int hashVal = hash<string>{}(ip) % BUCKETS;
+//        buckets[hashVal] << ip << '\n';
+//    }
+//
+//    fin.close();
+//    for (int i = 0; i < BUCKETS; ++i) {
+//        buckets[i].close();
+//    }
+//}
+//
+//// 第二步：在每个桶里找Top10
+//vector<IpCount> processBucket(const string& bucketFile) {
+//    ifstream fin(bucketFile);
+//    unordered_map<string, int> freq;
+//    string ip;
+//    while (fin >> ip) {
+//        freq[ip]++;
+//    }
+//    fin.close();
+//
+//    priority_queue<IpCount> minHeap;
+//    for (auto& [ip, count] : freq) {
+//        minHeap.push({ ip, count });
+//        if (minHeap.size() > 10) {
+//            minHeap.pop();
+//        }
+//    }
+//
+//    vector<IpCount> top10;
+//    while (!minHeap.empty()) {
+//        top10.push_back(minHeap.top());
+//        minHeap.pop();
+//    }
+//    return top10;
+//}
+//
+//// 第三步：合并所有桶的Top10
+//vector<IpCount> mergeAllTop10(const vector<vector<IpCount>>& allTop10) {
+//    priority_queue<IpCount> minHeap;
+//    for (const auto& bucketTop : allTop10) {
+//        for (const auto& ipcount : bucketTop) {
+//            minHeap.push(ipcount);
+//            if (minHeap.size() > 10) {
+//                minHeap.pop();
+//            }
+//        }
+//    }
+//
+//    vector<IpCount> finalTop10;
+//    while (!minHeap.empty()) {
+//        finalTop10.push_back(minHeap.top());
+//        minHeap.pop();
+//    }
+//    return finalTop10;
+//}
+//
+//int main() {
+//    string inputFile = "ip.txt"; // 假设所有IP存这个文件里
+//
+//    // 第一步：分桶
+//    splitIntoBuckets(inputFile);
+//
+//    // 第二步：每个桶内部Top10
+//    vector<vector<IpCount>> allTop10;
+//    for (int i = 0; i < BUCKETS; ++i) {
+//        string bucketFile = BUCKET_PREFIX + to_string(i) + ".txt";
+//        allTop10.push_back(processBucket(bucketFile));
+//    }
+//
+//    // 第三步：全局合并Top10
+//    vector<IpCount> finalTop10 = mergeAllTop10(allTop10);
+//
+//    // 输出最终Top10
+//    cout << "出现次数最多的10个IP是：" << endl;
+//    for (auto it = finalTop10.rbegin(); it != finalTop10.rend(); ++it) {
+//        cout << it->ip << " 出现了 " << it->count << " 次" << endl;
+//    }
+//
+//    return 0;
+//}
+
 #include <iostream>
-#include <fstream>
-#include <unordered_map>
-#include <queue>
-#include <vector>
-#include <string>
+//#include <vector>
+//using namespace std;
+//
+//// 调整小根堆向下（下沉）
+//void heapifyDown(vector<int>& heap, int idx, int heapSize) {
+//    int smallest = idx;
+//    int left = 2 * idx + 1;
+//    int right = 2 * idx + 2;
+//
+//    if (left < heapSize && heap[left] < heap[smallest]) {
+//        smallest = left;
+//    }
+//    if (right < heapSize && heap[right] < heap[smallest]) {
+//        smallest = right;
+//    }
+//    if (smallest != idx) {
+//        swap(heap[idx], heap[smallest]);
+//        heapifyDown(heap, smallest, heapSize);
+//    }
+//}
+//
+//// 调整小根堆向上（上浮）
+//void heapifyUp(vector<int>& heap, int idx) {
+//    if (idx == 0) return;
+//    int parent = (idx - 1) / 2;
+//    if (heap[parent] > heap[idx]) {
+//        swap(heap[parent], heap[idx]);
+//        heapifyUp(heap, parent);
+//    }
+//}
+//
+//// 主函数：找Top10最大元素
+//void findTop10Largest(const vector<int>& nums) {
+//    vector<int> heap; // 小根堆
+//
+//    for (int num : nums) {
+//        if (heap.size() < 10) {
+//            heap.push_back(num);
+//            heapifyUp(heap, heap.size() - 1); // 插入后上浮
+//        }
+//        else {
+//            if (num > heap[0]) {
+//                heap[0] = num; // 替换堆顶
+//                heapifyDown(heap, 0, heap.size()); // 替换后下沉
+//            }
+//        }
+//    }
+//
+//    // 最后输出Top10（无序的）
+//    cout << "最大的10个数是（无序）:" << endl;
+//    for (int num : heap) {
+//        cout << num << " ";
+//    }
+//    cout << endl;
+//}
+//
+//int main() {
+//    // 示例数据
+//    vector<int> nums = {
+//        12, 3, 55, 7, 89, 100, 2, 45, 67, 34, 88, 91, 25, 76, 54, 99, 1, 23, 66, 78, 85
+//    };
+//
+//    findTop10Largest(nums);
+//
+//    return 0;
+//}
 using namespace std;
-
-const int BUCKETS = 100; // 分成100个小桶
-const string BUCKET_PREFIX = "bucket_"; // 桶文件名前缀
-
-// 小根堆元素
-struct IpCount {
-    string ip;
-    int count;
-    bool operator<(const IpCount& other) const {
-        return count > other.count; // 注意：count小的在堆顶（小根堆）
-    }
-};
-
-// 第一步：把IP按哈希分桶
-void splitIntoBuckets(const string& inputFile) {
-    ifstream fin(inputFile);
-    if (!fin.is_open()) {
-        cerr << "无法打开文件" << endl;
-        return;
-    }
-
-    ofstream buckets[BUCKETS];
-    for (int i = 0; i < BUCKETS; ++i) {
-        buckets[i].open(BUCKET_PREFIX + to_string(i) + ".txt");
-    }
-
-    string ip;
-    while (fin >> ip) {
-        int hashVal = hash<string>{}(ip) % BUCKETS;
-        buckets[hashVal] << ip << '\n';
-    }
-
-    fin.close();
-    for (int i = 0; i < BUCKETS; ++i) {
-        buckets[i].close();
-    }
-}
-
-// 第二步：在每个桶里找Top10
-vector<IpCount> processBucket(const string& bucketFile) {
-    ifstream fin(bucketFile);
-    unordered_map<string, int> freq;
-    string ip;
-    while (fin >> ip) {
-        freq[ip]++;
-    }
-    fin.close();
-
-    priority_queue<IpCount> minHeap;
-    for (auto& [ip, count] : freq) {
-        minHeap.push({ ip, count });
-        if (minHeap.size() > 10) {
-            minHeap.pop();
-        }
-    }
-
-    vector<IpCount> top10;
-    while (!minHeap.empty()) {
-        top10.push_back(minHeap.top());
-        minHeap.pop();
-    }
-    return top10;
-}
-
-// 第三步：合并所有桶的Top10
-vector<IpCount> mergeAllTop10(const vector<vector<IpCount>>& allTop10) {
-    priority_queue<IpCount> minHeap;
-    for (const auto& bucketTop : allTop10) {
-        for (const auto& ipcount : bucketTop) {
-            minHeap.push(ipcount);
-            if (minHeap.size() > 10) {
-                minHeap.pop();
-            }
-        }
-    }
-
-    vector<IpCount> finalTop10;
-    while (!minHeap.empty()) {
-        finalTop10.push_back(minHeap.top());
-        minHeap.pop();
-    }
-    return finalTop10;
-}
-
-int main() {
-    string inputFile = "ip.txt"; // 假设所有IP存这个文件里
-
-    // 第一步：分桶
-    splitIntoBuckets(inputFile);
-
-    // 第二步：每个桶内部Top10
-    vector<vector<IpCount>> allTop10;
-    for (int i = 0; i < BUCKETS; ++i) {
-        string bucketFile = BUCKET_PREFIX + to_string(i) + ".txt";
-        allTop10.push_back(processBucket(bucketFile));
-    }
-
-    // 第三步：全局合并Top10
-    vector<IpCount> finalTop10 = mergeAllTop10(allTop10);
-
-    // 输出最终Top10
-    cout << "出现次数最多的10个IP是：" << endl;
-    for (auto it = finalTop10.rbegin(); it != finalTop10.rend(); ++it) {
-        cout << it->ip << " 出现了 " << it->count << " 次" << endl;
-    }
-
-    return 0;
+#include<queue>
+#include<vector>
+typedef struct TreeNode
+{
+	int val;
+	struct TreeNode* left;
+	struct TreeNode* right;
+}TreeNode;
+vector<int> LevelOrder(TreeNode* root)
+{
+	vector<int>rval;
+	queue<TreeNode*>q;
+	q.push(root);
+	if (!root) return;
+	while (!q.empty())
+	{
+		TreeNode* node = q.front();
+		rval.push_back(node->val);
+		q.pop();
+		if (node->left)
+			q.push(node->left);
+		if (node->right)
+			q.push(node->right);
+	}
+	return rval;
 }
