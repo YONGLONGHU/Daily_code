@@ -654,21 +654,93 @@ typedef struct TreeNode
 	struct TreeNode* left;
 	struct TreeNode* right;
 }TreeNode;
-vector<int> LevelOrder(TreeNode* root)
+//vector<int> LevelOrder(TreeNode* root)
+//{
+//	vector<int>rval;
+//	queue<TreeNode*>q;
+//	q.push(root);
+//	if (!root) return;
+//	while (!q.empty())
+//	{
+//		TreeNode* node = q.front();
+//		rval.push_back(node->val);
+//		q.pop();
+//		if (node->left)
+//			q.push(node->left);
+//		if (node->right)
+//			q.push(node->right);
+//	}
+//	return rval;
+//}
+//void Order(TreeNode* root, vector<int>&rval)
+//{
+//	if (!root) return;
+//	Order(root->left,rval);
+//	rval.push_back(root->val);
+//	Order(root->right, rval);
+//}
+//vector<int> InOrder(TreeNode* root)
+//{
+//	vector<int> rval;
+//	Order(root, rval);
+//	return rval;
+//}
+//struct ListNode {
+//	int val;
+//	struct ListNode* next;
+// ListNode(int x):val(x),next(nullptr){}
+//};
+//ListNode* GetInterNode(ListNode* A, ListNode* B)
+//{
+//	if (A == nullptr || B == nullptr) return nullptr;
+//	ListNode* pA = A, * pB = B;
+//	while (pA != pB)
+//	{
+//		pA = pA == nullptr ? pB : pA->next;
+//		pB = pB == nullptr ? pA : pB->next;
+//	}
+//	return pA;
+//}
+
+struct ListNode
 {
-	vector<int>rval;
-	queue<TreeNode*>q;
-	q.push(root);
-	if (!root) return;
-	while (!q.empty())
+	int val;
+	struct ListNode* next;
+	ListNode(int x):val(x),next(nullptr){}
+};
+ListNode* ReverseList(ListNode* head)
+{
+	ListNode* pre = nullptr;
+	ListNode* cur = head;
+	while (cur)
 	{
-		TreeNode* node = q.front();
-		rval.push_back(node->val);
-		q.pop();
-		if (node->left)
-			q.push(node->left);
-		if (node->right)
-			q.push(node->right);
+		ListNode* temp = cur->next;
+		cur->next = pre;
+		pre = cur;
+		cur = temp;
 	}
-	return rval;
+	return pre;
+}
+void PrintList(ListNode* head)
+{
+	while (head)
+	{
+		cout << head->val << " " << endl;
+		head = head->next;
+	}
+	return;
+}
+int main()
+{
+	ListNode* root=new ListNode(1);
+	ListNode* head = root;
+	for (int i = 2; i < 8; ++i)
+	{
+		root->next = new ListNode(1);
+		root = root->next;
+	}
+	PrintList(head);
+	root = ReverseList(head);
+	PrintList(root);
+	return  0;
 }
