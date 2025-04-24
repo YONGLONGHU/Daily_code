@@ -154,7 +154,7 @@
 //    return 0;
 //}
 
-#include<iostream>
+//#include<iostream>
 //typedef int(*FunType)(int, int);
 //int add(int v1, int v2) {
 //	return v1 + v2;
@@ -401,10 +401,10 @@
 //    uint32_t DelayTime() { return _timeout; }
 //};
 
-#include<iostream>
-#include<unordered_map>
-#include<vector>
-#include<string>
+//#include<iostream>
+//#include<unordered_map>
+//#include<vector>
+//#include<string>
 //class Solution
 //{
 //	vector<vector<string>> groupAnagrams(vector<string>& strs)
@@ -578,7 +578,7 @@
 //    return 0;
 //}
 
-#include <iostream>
+//#include <iostream>
 //#include <vector>
 //using namespace std;
 //
@@ -645,15 +645,15 @@
 //
 //    return 0;
 //}
-using namespace std;
-#include<queue>
-#include<vector>
-typedef struct TreeNode
-{
-	int val;
-	struct TreeNode* left;
-	struct TreeNode* right;
-}TreeNode;
+//using namespace std;
+//#include<queue>
+//#include<vector>
+//typedef struct TreeNode
+//{
+//	int val;
+//	struct TreeNode* left;
+//	struct TreeNode* right;
+//}TreeNode;
 //vector<int> LevelOrder(TreeNode* root)
 //{
 //	vector<int>rval;
@@ -702,45 +702,106 @@ typedef struct TreeNode
 //	return pA;
 //}
 
-struct ListNode
-{
-	int val;
-	struct ListNode* next;
-	ListNode(int x):val(x),next(nullptr){}
-};
-ListNode* ReverseList(ListNode* head)
-{
-	ListNode* pre = nullptr;
-	ListNode* cur = head;
-	while (cur)
-	{
-		ListNode* temp = cur->next;
-		cur->next = pre;
-		pre = cur;
-		cur = temp;
-	}
-	return pre;
-}
-void PrintList(ListNode* head)
-{
-	while (head)
-	{
-		cout << head->val << " " << endl;
-		head = head->next;
-	}
-	return;
-}
-int main()
-{
-	ListNode* root=new ListNode(1);
-	ListNode* head = root;
-	for (int i = 2; i < 8; ++i)
-	{
-		root->next = new ListNode(1);
-		root = root->next;
-	}
-	PrintList(head);
-	root = ReverseList(head);
-	PrintList(root);
-	return  0;
-}
+//struct ListNode
+//{
+//	int val;
+//	struct ListNode* next;
+//	ListNode(int x):val(x),next(nullptr){}
+//};
+//ListNode* ReverseList(ListNode* head)
+//{
+//	ListNode* pre = nullptr;
+//	ListNode* cur = head;
+//	while (cur)
+//	{
+//		ListNode* temp = cur->next;
+//		cur->next = pre;
+//		pre = cur;
+//		cur = temp;
+//	}
+//	return pre;
+//}
+//void PrintList(ListNode* head)
+//{
+//	while (head)
+//	{
+//		cout << head->val << " " << endl;
+//		head = head->next;
+//	}
+//	return;
+//}
+//int main()
+//{
+//	ListNode* root=new ListNode(1);
+//	ListNode* head = root;
+//	for (int i = 2; i < 8; ++i)
+//	{
+//		root->next = new ListNode(1);
+//		root = root->next;
+//	}
+//	PrintList(head);
+//	root = ReverseList(head);
+//	PrintList(root);
+//	return  0;
+//}
+//#include<iostream>
+//#include<vector>
+//#include<queue>
+//using namespace std;
+//typedef struct TreeNode
+//{
+//	int val;
+//	struct TreeNode* left;
+//	struct TreeNode* right;
+//	TreeNode(int x):val(x),left(nullptr),right(nullptr){}
+//}TreeNode;
+//void Level(TreeNode* root, vector<int> &result)
+//{
+//	queue<TreeNode*> q;
+//	q.push(root);
+//	int count = 0;
+//	while (!q.empty())
+//	{
+//		count++;
+//		int size = q.size();
+//		vector<int> temp_result;
+//		for (int i = 0; i < size; i++)
+//		{
+//			TreeNode* temp = q.front();
+//			q.pop();
+//			temp_result.push_back(temp->val);
+//			if (temp->left != nullptr)
+//				q.push(temp->left);
+//			if (temp->right != nullptr)
+//				q.push(temp->right);
+//		}
+//		if (count % 2 == 1)
+//			for (int i = 0; i < size; ++i)
+//				result.push_back(temp_result[i]);
+//		else
+//			for (int i = size-1; i >=0; --i)
+//				result.push_back(temp_result[i]);
+//	}
+//}
+//int main()
+//{
+//	vector<int> result;
+//	TreeNode* root = new TreeNode(1);
+//	root->left= new TreeNode(2);
+//	root->right = new TreeNode(3);
+//	root->left->left = new TreeNode(4);
+//	root->left->right = new TreeNode(5);
+//	root->right->left = new TreeNode(6);
+//	root->right->right = new TreeNode(7);
+//	Level(root,result);
+//	for (auto& e : result)
+//		cout << e << " ";
+//	delete root->right->right;
+//	delete root->right->left;
+//	delete root->left->right;
+//	delete root->left->left;
+//	delete root->right;
+//	delete root->left;
+//	delete root;
+//	return 0;
+//}
