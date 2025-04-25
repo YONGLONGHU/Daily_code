@@ -805,3 +805,251 @@
 //	delete root;
 //	return 0;
 //}
+
+//TOPK排序 以增序为例
+//#include<iostream>
+//#include<vector>
+//using namespace std;
+//void UpHeap(vector<int>& tempheap, int i)
+//{
+//	while (i > 0)
+//	{
+//		int parent = i / 2;
+//		if (tempheap[i] < tempheap[parent])
+//		{
+//			swap(tempheap[i], tempheap[parent]);
+//			UpHeap(tempheap, parent);
+//		}
+//		else
+//			break;
+//	}
+//}
+//void DownHeap(vector<int>& tempheap,int i,int K)
+//{
+//	while (i < K)
+//	{
+//		int leftson = 2 * i + 1;
+//		int rightson = 2 * i + 2;
+//		int smallest = i;
+//		if (leftson<K && tempheap[smallest] > tempheap[leftson])
+//			smallest = leftson;
+//		if (rightson<K && tempheap[smallest] > tempheap[rightson])
+//			smallest = rightson;
+//		if (smallest != i)
+//		{
+//			swap(tempheap[smallest], tempheap[i]);
+//			DownHeap(tempheap, smallest, K);
+//		}
+//		else
+//			break;
+//	}
+//}
+//void Heap_Sort(vector<int >&  nums, int K)
+//{
+//	vector<int> heapnums;
+//	int size = nums.size();
+//	for (int i = 0; i < size; i++)
+//	{
+//		if (i < K)
+//		{
+//			heapnums.push_back(nums[i]);
+//			UpHeap(heapnums, i);
+//		}
+//		else
+//		{
+//			if (nums[i] <= heapnums[0])
+//				continue;
+//			else
+//			{
+//				heapnums[0]=nums[i];
+//				DownHeap(heapnums,0, K);
+//			}
+//		}
+//	}
+//	for (auto& e : heapnums)
+//		cout << e << " ";
+//}
+//int main()
+//{
+//	vector<int> test_nums{ 2,3,45,6,21,3,5,12,546 };
+//	int K = 5;
+//	Heap_Sort(test_nums, K);
+//	return 0;
+//}
+
+//堆排序
+#include<iostream>
+using namespace std;
+#include<vector>
+#include<stack>
+//void HeapSort(vector<int>& nums)
+//{
+//	//1、向上调整成大根堆
+//	int size = nums.size();
+//	int i = (size - 1) / 2;
+//	while (i >= 0)
+//	{
+//		int left = i * 2 + 1;
+//		int right = i * 2 + 2;
+//		int largest = i;
+//		if (left < size - 1 && nums[largest] < nums[left])
+//			largest = left;
+//		if (right < size - 1 && nums[largest] < nums[right])
+//			largest = right;
+//		if (largest != i)
+//			swap(nums[largest], nums[i]);
+//		--i;
+//	}
+//	//2、交换根节点和末尾节点，向下调整
+//	for (int j=size-1;j>0;j--)
+//	{
+//		swap(nums[0], nums[j]);
+//		//向下调整
+//		int k = 0;
+//		while (k < j)
+//		{
+//			int largest = k;
+//			int leftson = k * 2 + 1;
+//			int rightson = k * 2 + 2;
+//			if (leftson < j && nums[leftson] < nums[largest])
+//				largest = leftson;
+//			if (leftson < j && nums[rightson] < nums[largest])
+//				largest = rightson;
+//			if (largest != k)
+//				swap(nums[largest], nums[k--]);
+//			else break;
+//
+//		}
+//	}
+//
+//}
+//void UpHeapAdjust(vector<int>& nums, int i,int length)
+//{
+//	int largest = i;
+//	int left = 2 * i + 1;
+//	int right = 2 * i + 2;
+//	if (left < length && nums[largest] < nums[left])
+//		largest = left;
+//	if (right < length && nums[largest] < nums[right])
+//		largest = right;
+//	if (i != largest)
+//	{
+//		swap(nums[largest], nums[i]);
+//		UpHeapAdjust(nums, largest,length);
+//	}
+//}
+//void HeapSort(vector<int> &nums)
+//{
+//	//1.向上调整形成大根堆
+//	int numbers = nums.size();
+//	for (int i = numbers / 2 - 1; i >= 0; i--)
+//		UpHeapAdjust(nums, i,numbers);
+//	//2.交换根节点 向下调整
+//	for (int i = numbers - 1; i--; i > 1)
+//		UpHeapAdjust(nums, 0, i); 
+//}
+//int main()
+//{
+//	vector<int> test_nums{ 1,5,7,3,23,4,234,12,45,66,23,45 };
+//	HeapSort(test_nums);
+//	for (auto& e : test_nums)
+//		cout << e << " ";
+//	return 0;
+
+typedef struct TreeNode
+{
+	int val;
+	struct TreeNode* left;
+	struct TreeNode* right;
+	TreeNode(int x):val(x),left(nullptr),right(nullptr){}
+}TreeNode;
+void PreOrder(TreeNode* root,vector<int>& result)
+{
+	stack<TreeNode*> s;
+	s.push(root);
+	while (!s.empty())
+	{
+		TreeNode* temp = s.top();
+		s.pop();
+		result.push_back(temp->val);
+		if (temp->right)
+			s.push(temp->right);
+		if (temp->left)
+			s.push(temp->left);
+	}
+}
+int main1()
+{
+	vector<int> result;
+	TreeNode* root = new TreeNode(1);
+	root->left = new TreeNode(2);
+	root->right = new TreeNode(4);
+	root->left->left = new TreeNode(7);
+	root->right->left = new TreeNode(6);
+	root->left->right = new TreeNode(7);
+	root->right->right = new TreeNode(6);
+	PreOrder(root, result);
+	for (auto& e : result)
+		cout << e << " ";
+	return 0;
+}
+
+typedef struct ListNode
+{
+	int val;
+	struct ListNode* next;
+	ListNode(int x):val(x),next(nullptr){}
+}ListNode;
+ListNode* TwoMeet(ListNode* head1, ListNode* head2)
+{
+	ListNode* cur1 = head1;
+	ListNode* cur2 = head2;
+	while (head1!= head2)
+	{
+		head1 = head1 == nullptr ? cur2 : head1->next;
+		head2 = head2 == nullptr ? cur1 : head2->next;
+	}
+	return head1;
+}
+int main2()
+{
+	ListNode* temp = nullptr;
+	ListNode* head1 = new ListNode(1);
+	head1->next = new ListNode(2);
+	temp = head1->next;
+	head1->next->next = new ListNode(20);
+	ListNode* head2 = new ListNode(10);
+	head2->next = new ListNode(22);
+	head2->next->next = temp;
+	//返回相遇的节点的地址
+	ListNode* meet= TwoMeet(head1, head2);
+	cout << meet->val<<endl;
+	return 0;
+}
+ListNode* PostVal(ListNode* head,int k)
+{
+	ListNode* fast = head;
+	ListNode* slow = head;
+	for (int i = 0; i <= k; i++)
+		fast = fast->next;
+	while (fast != nullptr)
+	{
+		fast = fast->next;
+		slow = slow->next;
+	}
+	return slow->next;
+}
+int main()
+{
+	ListNode* head = new ListNode(1);
+	ListNode* h = head;
+	int k = 4;
+	for (int i = 0; i < 10; i++)
+	{
+		head->next = new ListNode(i + 2);
+		head = head->next;
+	}
+	ListNode* result = PostVal(h, k);
+	cout << result->val<<endl;
+	return 0;
+}
