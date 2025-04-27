@@ -1226,3 +1226,68 @@ ListNode* swapPairs(ListNode* head) {
 
 	return dummy->next;  // 返回新的头节点
 }
+void inorder(TreeNode* root, vector<int> &res)
+{
+	if (root == nullptr)
+		return;
+	inorder(root->left, res);
+	res.push_back(root->val);
+	inorder(root->right, res);
+}
+vector<int> Inorder(TreeNode* root)
+{
+	vector<int> res;
+	inorder(root, res);
+	return res;
+}
+
+#include<unordered_map>
+#include<algorithm>
+vector<vector<string>> groupAnagrams(vector<string>& strs)
+{
+	unordered_map<string, vector<string>> data;
+	for (auto& e : strs)
+	{
+		string str = e;
+		sort(str.begin(), str.end());
+		data[str].push_back(e);
+	}
+	vector<vector<string>> ans;
+	for (auto& pair : data)
+		ans.push_back(pair.second);
+	return ans;
+}
+
+//#include<cctype>
+//int main()
+//{
+//	char a = 'A';
+//	if (islower(a))
+//		cout << "小写" << endl;
+//	if (isupper(a))
+//		cout << "大写" << endl;
+//	toupper(a);
+//	cout << a << endl;
+//}
+int longestConsecutive(vector<int>& nums)
+{
+	int result = 1;
+	int count = 1;
+	int length = nums.size();
+	if (length == 0)return 0;
+	if (length == 1)return 1;
+	sort(nums.begin(),nums.end());
+	for (int i = 0; i < length - 1; ++i)
+	{
+		if (nums[i] == nums[i + 1])
+			continue;
+		if (nums[i] + 1 != nums[i + 1])
+		{
+			result = max(result, count);
+			count = 1;
+			continue;
+		}
+		++count;
+	}
+	return max(result, count);
+}
