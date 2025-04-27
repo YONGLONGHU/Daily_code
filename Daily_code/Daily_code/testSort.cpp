@@ -956,77 +956,77 @@ using namespace std;
 //		cout << e << " ";
 //	return 0;
 
-class TcpServer {
-private:
-	uint64_t _next_id;      //这是一个自动增长的连接ID，
-	int _port;
-	int _timeout;           //这是非活跃连接的统计时间---多长时间无通信就是非活跃连接
-	bool _enable_inactive_release;//是否启动了非活跃连接超时销毁的判断标志
-	EventLoop _baseloop;    //这是主线程的EventLoop对象，负责监听事件的处理
-	Acceptor _acceptor;    //这是监听套接字的管理对象
-	LoopThreadPool _pool;   //这是从属EventLoop线程池
-	std::unordered_map<uint64_t, PtrConnection> _conns;//保存管理所有连接对应的shared_ptr对象
-
-	using ConnectedCallback = std::function<void(const PtrConnection&)>;
-	using MessageCallback = std::function<void(const PtrConnection&, Buffer*)>;
-	using ClosedCallback = std::function<void(const PtrConnection&)>;
-	using AnyEventCallback = std::function<void(const PtrConnection&)>;
-	using Functor = std::function<void()>;
-	ConnectedCallback _connected_callback;
-	MessageCallback _message_callback;
-	ClosedCallback _closed_callback;
-	AnyEventCallback _event_callback;
-private:
-	void RunAfterInLoop(const Functor& task, int delay) {
-		_next_id++;
-		_baseloop.TimerAdd(_next_id, delay, task);
-	}
-	//为新连接构造一个Connection进行管理
-	void NewConnection(int fd) {
-		_next_id++;
-		PtrConnection conn(new Connection(_pool.NextLoop(), _next_id, fd));
-		conn->SetMessageCallback(_message_callback);
-		conn->SetClosedCallback(_closed_callback);
-		conn->SetConnectedCallback(_connected_callback);
-		conn->SetAnyEventCallback(_event_callback);
-		conn->SetSrvClosedCallback(std::bind(&TcpServer::RemoveConnection, this, std::placeholders::_1));
-		if (_enable_inactive_release) conn->EnableInactiveRelease(_timeout);//启动非活跃超时销毁
-		conn->Established();//就绪初始化
-		_conns.insert(std::make_pair(_next_id, conn));
-	}
-	void RemoveConnectionInLoop(const PtrConnection& conn) {
-		int id = conn->Id();
-		auto it = _conns.find(id);
-		if (it != _conns.end()) {
-			_conns.erase(it);
-		}
-	}
-	//从管理Connection的_conns中移除连接信息
-	void RemoveConnection(const PtrConnection& conn) {
-		_baseloop.RunInLoop(std::bind(&TcpServer::RemoveConnectionInLoop, this, conn));
-	}
-public:
-	TcpServer(int port) :
-		_port(port),
-		_next_id(0),
-		_enable_inactive_release(false),
-		_acceptor(&_baseloop, port),
-		_pool(&_baseloop) {
-		_acceptor.SetAcceptCallback(std::bind(&TcpServer::NewConnection, this, std::placeholders::_1));
-		_acceptor.Listen();//将监听套接字挂到baseloop上
-	}
-	void SetThreadCount(int count) { return _pool.SetThreadCount(count); }
-	void SetConnectedCallback(const ConnectedCallback& cb) { _connected_callback = cb; }
-	void SetMessageCallback(const MessageCallback& cb) { _message_callback = cb; }
-	void SetClosedCallback(const ClosedCallback& cb) { _closed_callback = cb; }
-	void SetAnyEventCallback(const AnyEventCallback& cb) { _event_callback = cb; }
-	void EnableInactiveRelease(int timeout) { _timeout = timeout; _enable_inactive_release = true; }
-	//用于添加一个定时任务
-	void RunAfter(const Functor& task, int delay) {
-		_baseloop.RunInLoop(std::bind(&TcpServer::RunAfterInLoop, this, task, delay));
-	}
-	void Start() { _pool.Create();  _baseloop.Start(); }
-};
+//class TcpServer {
+//private:
+//	uint64_t _next_id;      //这是一个自动增长的连接ID，
+//	int _port;
+//	int _timeout;           //这是非活跃连接的统计时间---多长时间无通信就是非活跃连接
+//	bool _enable_inactive_release;//是否启动了非活跃连接超时销毁的判断标志
+//	EventLoop _baseloop;    //这是主线程的EventLoop对象，负责监听事件的处理
+//	Acceptor _acceptor;    //这是监听套接字的管理对象
+//	LoopThreadPool _pool;   //这是从属EventLoop线程池
+//	std::unordered_map<uint64_t, PtrConnection> _conns;//保存管理所有连接对应的shared_ptr对象
+//
+//	using ConnectedCallback = std::function<void(const PtrConnection&)>;
+//	using MessageCallback = std::function<void(const PtrConnection&, Buffer*)>;
+//	using ClosedCallback = std::function<void(const PtrConnection&)>;
+//	using AnyEventCallback = std::function<void(const PtrConnection&)>;
+//	using Functor = std::function<void()>;
+//	ConnectedCallback _connected_callback;
+//	MessageCallback _message_callback;
+//	ClosedCallback _closed_callback;
+//	AnyEventCallback _event_callback;
+//private:
+//	void RunAfterInLoop(const Functor& task, int delay) {
+//		_next_id++;
+//		_baseloop.TimerAdd(_next_id, delay, task);
+//	}
+//	//为新连接构造一个Connection进行管理
+//	void NewConnection(int fd) {
+//		_next_id++;
+//		PtrConnection conn(new Connection(_pool.NextLoop(), _next_id, fd));
+//		conn->SetMessageCallback(_message_callback);
+//		conn->SetClosedCallback(_closed_callback);
+//		conn->SetConnectedCallback(_connected_callback);
+//		conn->SetAnyEventCallback(_event_callback);
+//		conn->SetSrvClosedCallback(std::bind(&TcpServer::RemoveConnection, this, std::placeholders::_1));
+//		if (_enable_inactive_release) conn->EnableInactiveRelease(_timeout);//启动非活跃超时销毁
+//		conn->Established();//就绪初始化
+//		_conns.insert(std::make_pair(_next_id, conn));
+//	}
+//	void RemoveConnectionInLoop(const PtrConnection& conn) {
+//		int id = conn->Id();
+//		auto it = _conns.find(id);
+//		if (it != _conns.end()) {
+//			_conns.erase(it);
+//		}
+//	}
+//	//从管理Connection的_conns中移除连接信息
+//	void RemoveConnection(const PtrConnection& conn) {
+//		_baseloop.RunInLoop(std::bind(&TcpServer::RemoveConnectionInLoop, this, conn));
+//	}
+//public:
+//	TcpServer(int port) :
+//		_port(port),
+//		_next_id(0),
+//		_enable_inactive_release(false),
+//		_acceptor(&_baseloop, port),
+//		_pool(&_baseloop) {
+//		_acceptor.SetAcceptCallback(std::bind(&TcpServer::NewConnection, this, std::placeholders::_1));
+//		_acceptor.Listen();//将监听套接字挂到baseloop上
+//	}
+//	void SetThreadCount(int count) { return _pool.SetThreadCount(count); }
+//	void SetConnectedCallback(const ConnectedCallback& cb) { _connected_callback = cb; }
+//	void SetMessageCallback(const MessageCallback& cb) { _message_callback = cb; }
+//	void SetClosedCallback(const ClosedCallback& cb) { _closed_callback = cb; }
+//	void SetAnyEventCallback(const AnyEventCallback& cb) { _event_callback = cb; }
+//	void EnableInactiveRelease(int timeout) { _timeout = timeout; _enable_inactive_release = true; }
+//	//用于添加一个定时任务
+//	void RunAfter(const Functor& task, int delay) {
+//		_baseloop.RunInLoop(std::bind(&TcpServer::RunAfterInLoop, this, task, delay));
+//	}
+//	void Start() { _pool.Create();  _baseloop.Start(); }
+//};
 
 typedef struct TreeNode
 {
@@ -1111,7 +1111,7 @@ ListNode* PostVal(ListNode* head,int k)
 	}
 	return slow->next;
 }
-int main()
+int main4()
 {
 	ListNode* head = new ListNode(1);
 	ListNode* h = head;
@@ -1124,4 +1124,105 @@ int main()
 	ListNode* result = PostVal(h, k);
 	cout << result->val<<endl;
 	return 0;
+}
+
+bool HasCycle(ListNode* head)
+{
+	if (head == nullptr || head->next == nullptr)
+		return false;
+	ListNode* fast = head;
+	ListNode* slow = head;
+	while (fast!=nullptr&&fast->next!=nullptr)
+	{
+		fast = fast->next->next;
+		slow = slow->next;
+		if (slow == fast)
+			return true;
+	}
+	return false;
+}
+ListNode* mergeTwoLists(ListNode* list1, ListNode* list2)
+{
+	ListNode* duryy = new ListNode(-1);
+	ListNode* pre = duryy;
+	while (list1 != nullptr && list2 != nullptr)
+	{
+		if (list1->val < list2->val)
+		{
+			pre->next = list1;
+			list1 = list1->next;
+			pre = pre->next;
+		}
+		else
+		{
+			pre->next = list2;
+			list2 = list2->next;
+			pre = pre->next;
+		}
+	}
+	if (list1 == nullptr)
+	{
+		pre->next = list2;
+		return duryy;
+	}
+	else
+	{
+		pre->next = list1;
+		return duryy;
+	}
+}
+
+ListNode* removeNthFromEnd(ListNode* head,int n)
+{
+	if (head == nullptr)
+		return head;
+	ListNode* dummy=new ListNode(-1);
+	dummy -> next = head;
+	ListNode* fast = dummy;
+	ListNode* slow = dummy;
+	for (int i = 0; i < n; i++)
+	{
+		if (fast->next == nullptr)
+			return head;
+		fast = fast->next;
+	}
+	while (fast->next != nullptr)
+	{
+		fast = fast->next;
+		slow = slow->next;
+	}
+	ListNode* temp = slow->next;
+	slow->next = temp->next;
+	temp->next = nullptr;
+	delete temp;
+	delete dummy;
+	return head;
+}
+ListNode* swapPairs(ListNode* head) {
+	if (head == nullptr || head->next == nullptr) {
+		return head;
+	}
+
+	// 创建一个虚拟节点，作为新头节点
+	ListNode* dummy = new ListNode(0);
+	dummy->next = head;
+
+	ListNode* prev = dummy;
+	ListNode* current = head;
+
+	while (current != nullptr && current->next != nullptr) {
+		ListNode* nextNode = current->next->next;  // 保留下一个节点
+		ListNode* second = current->next;  // 第二个节点
+
+		// 交换当前的两个节点
+		prev->next = second;
+		second->next = current;
+		current->next = nextNode;
+
+		// 更新prev和current
+		prev = current;
+		current = nextNode;
+	}
+
+	return dummy->next;  // 返回新的头节点
 }
