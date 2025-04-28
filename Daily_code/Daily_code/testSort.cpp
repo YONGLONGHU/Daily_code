@@ -1344,3 +1344,34 @@ string longestPalindrome(string s)
 	}
 	return s.substr(start, end - start + 1);
 }
+
+class Solution {
+public:
+	string longestCommonPrefix(vector<string>& strs)
+	{
+		string result;
+		int size = strs.size();
+		int pos = 0;
+		int i = 0;
+		int minlength = strs[0].size();
+		for (int j = 1; j < size; ++j)
+		{
+			if (strs[j].size() < minlength)
+				minlength = strs[j].size();
+		}
+		while (pos < minlength)
+		{
+			bool judge = true;
+			for (i = 0; i < size - 1; i++)
+			{
+				if (strs[i][pos] != strs[i + 1][pos])
+				{
+					judge = false;
+					return result;
+				}
+			}
+			result += strs[i][pos++];
+		}
+		return result;
+	}
+};
