@@ -1291,3 +1291,56 @@ int longestConsecutive(vector<int>& nums)
 	}
 	return max(result, count);
 }
+#include<unordered_set>
+int lengthOfLongestSubstring(string s)
+{
+	unordered_set<char> occ;
+	int size = s.size();
+	int rk = 0;
+	int result = 0;
+	for (int i = 0; i < size; i++)
+	{
+		if (i != 0)
+			occ.erase(s[i - 1]);
+		while (rk < size && occ.count(s[rk]) == 0)
+		{
+			occ.insert(s[rk]);
+			rk++;
+		}
+		result = max(result, rk - i);
+	}
+	return result;
+}
+#include<utility>
+pair<int, int> ExpandCenter(string& s, int left, int right)
+{
+	while (left >= 0 && right < s.size() && s[left] == s[right])
+	{
+		--left; right++;
+	}
+	return { left++,right-- };
+}
+string longestPalindrome(string s)
+{
+	int start = 0, end = 0;
+	for (int i = 0; i < s.size(); ++i)
+	{
+		pair<int,int> p1= ExpandCenter(s, i, i);
+		pair<int, int> p2 = ExpandCenter(s, i, i+1);
+		int left1 = p1.first;
+		int right1 = p1.second;
+		int left2 = p2.first;
+		int right2 = p2.second;
+		if (right1 - left1 > end - start)
+		{
+			start = left1;
+			end = right1;
+		}
+		if (right2 - left2 > end - start)
+		{
+			start = left2;
+			end = right2;
+		}
+	}
+	return s.substr(start, end - start + 1);
+}
