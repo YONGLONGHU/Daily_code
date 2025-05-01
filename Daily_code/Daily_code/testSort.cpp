@@ -1407,3 +1407,47 @@ void* my_memcpy(void* dest, const void* src, size_t n) {
 	}
 	return dest;
 }
+// packet.h
+#pragma once
+#include <cstring>
+#include <arpa/inet.h>
+
+struct Packet {
+	int id;
+	float value;
+	char name[32];
+
+	void serialize(char* buffer) const {
+		int offset = 0;
+		int net_id = htonl(id);
+		memcpy(buffer + offset, &net_id, sizeof(net_id));
+		offset += sizeof(net_id);
+
+		uint32_t float_bits;
+		memcpy(&float_bits, &value, sizeof(value));
+		float_bits = htonl(float_bits);
+		memcpy(buffer + offset, &float_bits, sizeof(float_bits));
+		offset += sizeof(float_bits);
+
+		memcpy(buffer + offset, name, sizeof(name));
+	}
+
+	static Packet deserialize(const char* buffer) {
+		Packet p;
+		int offset = 0;
+
+		int net_id;
+		memcpy(&net_id, buffer + offset, sizeof(net_id));
+		p.id = ntohl(net_id);
+		offset += sizeof(net_id);
+
+		uint32_t float_bits;
+		memcpy(&float_bits, buffer + offset, sizeof(float_bits));
+		float_bits = ntohl(float_bits);
+		memcpy(&p.value, &float_bits, sizeof(p.value));
+		offset += sizeof(float_bits);
+
+		memcpy(p.name, buffer + offset, sizeof(p.name));
+		return p;
+	}
+};
