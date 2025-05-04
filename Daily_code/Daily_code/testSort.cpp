@@ -1451,3 +1451,67 @@ struct Packet {
 		return p;
 	}
 };
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include <arpa/inet.h>
+
+#define PORT 8888
+#define BUFLEN 1024
+
+int main() {
+	int server_fd, client_fd;
+	struct sockaddr_in server_addr, client_addr;
+	char buffer[BUFLEN];
+	socklen_t addr_len = sizeof(client_addr);
+
+	// 创建 socket
+	if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+		perror("socket creation failed");
+		exit(EXIT_FAILURE);
+	}
+
+	// 设置服务器地址
+	server_addr.sin_family = AF_INET;
+	server_addr.sin_addr.s_addr = INADDR_ANY; // 监听所有 IP
+	server_addr.sin_port = htons(PORT);
+
+	// 绑定端口
+	if (bind(server_fd, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
+		perror("bind failed");
+		close(server_fd);
+		exit(EXIT_FAILURE);
+	}
+
+	// 开始监听
+	if (listen(server_fd, 5) < 0) {
+		perror("listen failed");
+		close(server_fd);
+		exit(EXIT_FAILURE);
+	}
+
+	printf("TCP Server listening on port %d...\n", PORT);
+
+	// 等待客户端连接
+	if ((client_fd = accept(server_fd, (struct sockaddr*)&client_addr, &addr_len)) < 0) {
+		perror("accept failed");
+		close(server_fd);
+		exit(EXIT_FAILURE);
+	}
+
+	// 通信
+	while (1) {
+		memset(buffer, 0, BUFLEN);
+		int len = read(client_fd, buffer, BUFLEN);
+		if (len <= 0) break;
+
+		printf("Received from client: %s\n", buffer);
+		write(client_fd, buffer, len); // 回显
+	}
+
+	close(client_fd);
+	close(server_fd);
+	return 0;
+}
