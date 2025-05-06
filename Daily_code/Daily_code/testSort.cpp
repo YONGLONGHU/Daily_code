@@ -1269,274 +1269,412 @@ vector<vector<string>> groupAnagrams(vector<string>& strs)
 //	toupper(a);
 //	cout << a << endl;
 //}
-int longestConsecutive(vector<int>& nums)
-{
-	int result = 1;
-	int count = 1;
-	int length = nums.size();
-	if (length == 0)return 0;
-	if (length == 1)return 1;
-	sort(nums.begin(),nums.end());
-	for (int i = 0; i < length - 1; ++i)
-	{
-		if (nums[i] == nums[i + 1])
-			continue;
-		if (nums[i] + 1 != nums[i + 1])
-		{
-			result = max(result, count);
-			count = 1;
-			continue;
-		}
-		++count;
-	}
-	return max(result, count);
-}
-#include<unordered_set>
-int lengthOfLongestSubstring(string s)
-{
-	unordered_set<char> occ;
-	int size = s.size();
-	int rk = 0;
-	int result = 0;
-	for (int i = 0; i < size; i++)
-	{
-		if (i != 0)
-			occ.erase(s[i - 1]);
-		while (rk < size && occ.count(s[rk]) == 0)
-		{
-			occ.insert(s[rk]);
-			rk++;
-		}
-		result = max(result, rk - i);
-	}
-	return result;
-}
-#include<utility>
-pair<int, int> ExpandCenter(string& s, int left, int right)
-{
-	while (left >= 0 && right < s.size() && s[left] == s[right])
-	{
-		--left; right++;
-	}
-	return { left++,right-- };
-}
-string longestPalindrome(string s)
-{
-	int start = 0, end = 0;
-	for (int i = 0; i < s.size(); ++i)
-	{
-		pair<int,int> p1= ExpandCenter(s, i, i);
-		pair<int, int> p2 = ExpandCenter(s, i, i+1);
-		int left1 = p1.first;
-		int right1 = p1.second;
-		int left2 = p2.first;
-		int right2 = p2.second;
-		if (right1 - left1 > end - start)
-		{
-			start = left1;
-			end = right1;
-		}
-		if (right2 - left2 > end - start)
-		{
-			start = left2;
-			end = right2;
-		}
-	}
-	return s.substr(start, end - start + 1);
-}
+//int longestConsecutive(vector<int>& nums)
+//{
+//	int result = 1;
+//	int count = 1;
+//	int length = nums.size();
+//	if (length == 0)return 0;
+//	if (length == 1)return 1;
+//	sort(nums.begin(),nums.end());
+//	for (int i = 0; i < length - 1; ++i)
+//	{
+//		if (nums[i] == nums[i + 1])
+//			continue;
+//		if (nums[i] + 1 != nums[i + 1])
+//		{
+//			result = max(result, count);
+//			count = 1;
+//			continue;
+//		}
+//		++count;
+//	}
+//	return max(result, count);
+//}
+//#include<unordered_set>
+//int lengthOfLongestSubstring(string s)
+//{
+//	unordered_set<char> occ;
+//	int size = s.size();
+//	int rk = 0;
+//	int result = 0;
+//	for (int i = 0; i < size; i++)
+//	{
+//		if (i != 0)
+//			occ.erase(s[i - 1]);
+//		while (rk < size && occ.count(s[rk]) == 0)
+//		{
+//			occ.insert(s[rk]);
+//			rk++;
+//		}
+//		result = max(result, rk - i);
+//	}
+//	return result;
+//}
+//#include<utility>
+//pair<int, int> ExpandCenter(string& s, int left, int right)
+//{
+//	while (left >= 0 && right < s.size() && s[left] == s[right])
+//	{
+//		--left; right++;
+//	}
+//	return { left++,right-- };
+//}
+//string longestPalindrome(string s)
+//{
+//	int start = 0, end = 0;
+//	for (int i = 0; i < s.size(); ++i)
+//	{
+//		pair<int,int> p1= ExpandCenter(s, i, i);
+//		pair<int, int> p2 = ExpandCenter(s, i, i+1);
+//		int left1 = p1.first;
+//		int right1 = p1.second;
+//		int left2 = p2.first;
+//		int right2 = p2.second;
+//		if (right1 - left1 > end - start)
+//		{
+//			start = left1;
+//			end = right1;
+//		}
+//		if (right2 - left2 > end - start)
+//		{
+//			start = left2;
+//			end = right2;
+//		}
+//	}
+//	return s.substr(start, end - start + 1);
+//}
+//
+//class Solution {
+//public:
+//	string longestCommonPrefix(vector<string>& strs)
+//	{
+//		string result;
+//		int size = strs.size();
+//		int pos = 0;
+//		int i = 0;
+//		int minlength = strs[0].size();
+//		for (int j = 1; j < size; ++j)
+//		{
+//			if (strs[j].size() < minlength)
+//				minlength = strs[j].size();
+//		}
+//		while (pos < minlength)
+//		{
+//			bool judge = true;
+//			for (i = 0; i < size - 1; i++)
+//			{
+//				if (strs[i][pos] != strs[i + 1][pos])
+//				{
+//					judge = false;
+//					return result;
+//				}
+//			}
+//			result += strs[i][pos++];
+//		}
+//		return result;
+//	}
+//};
+//
+//class Solution {
+//public:
+//	bool isValid(string s) {
+//		stack<char> stk;
+//		for (int i = 0; i < s.size(); i++) {
+//			if (s[i] == '(')
+//				stk.push(')');
+//			else if (s[i] == '[')
+//				stk.push(']');
+//			else if (s[i] == '{')
+//				stk.push('}');
+//			else if (!stk.empty() && s[i] == stk.top()) {
+//				stk.pop();
+//			}
+//			else {
+//				return false;
+//			}
+//		}
+//		return stk.empty();
+//	}
+//};
+//
+//void* my_memcpy(void* dest, const void* src, size_t n) {
+//	char* d = (char*)dest;
+//	const char* s = (const char*)src;
+//
+//	while (n--) {
+//		*d++ = *s++;
+//	}
+//	return dest;
+//}
+//// packet.h
+//#pragma once
+//#include <cstring>
+//#include <arpa/inet.h>
+//
+//struct Packet {
+//	int id;
+//	float value;
+//	char name[32];
+//
+//	void serialize(char* buffer) const {
+//		int offset = 0;
+//		int net_id = htonl(id);
+//		memcpy(buffer + offset, &net_id, sizeof(net_id));
+//		offset += sizeof(net_id);
+//
+//		uint32_t float_bits;
+//		memcpy(&float_bits, &value, sizeof(value));
+//		float_bits = htonl(float_bits);
+//		memcpy(buffer + offset, &float_bits, sizeof(float_bits));
+//		offset += sizeof(float_bits);
+//
+//		memcpy(buffer + offset, name, sizeof(name));
+//	}
+//
+//	static Packet deserialize(const char* buffer) {
+//		Packet p;
+//		int offset = 0;
+//
+//		int net_id;
+//		memcpy(&net_id, buffer + offset, sizeof(net_id));
+//		p.id = ntohl(net_id);
+//		offset += sizeof(net_id);
+//
+//		uint32_t float_bits;
+//		memcpy(&float_bits, buffer + offset, sizeof(float_bits));
+//		float_bits = ntohl(float_bits);
+//		memcpy(&p.value, &float_bits, sizeof(p.value));
+//		offset += sizeof(float_bits);
+//
+//		memcpy(p.name, buffer + offset, sizeof(p.name));
+//		return p;
+//	}
+//};
+//
+//#include <stdio.h>
+//#include <stdlib.h>
+//#include <string.h>
+//#include <unistd.h>
+//#include <arpa/inet.h>
+//
+//#define PORT 8888
+//#define BUFLEN 1024
+//
+//int main() {
+//	int server_fd, client_fd;
+//	struct sockaddr_in server_addr, client_addr;
+//	char buffer[BUFLEN];
+//	socklen_t addr_len = sizeof(client_addr);
+//
+//	// 创建 socket
+//	if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
+//		perror("socket creation failed");
+//		exit(EXIT_FAILURE);
+//	}
+//
+//	// 设置服务器地址
+//	server_addr.sin_family = AF_INET;
+//	server_addr.sin_addr.s_addr = INADDR_ANY; // 监听所有 IP
+//	server_addr.sin_port = htons(PORT);
+//
+//	// 绑定端口
+//	if (bind(server_fd, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
+//		perror("bind failed");
+//		close(server_fd);
+//		exit(EXIT_FAILURE);
+//	}
+//
+//	// 开始监听
+//	if (listen(server_fd, 5) < 0) {
+//		perror("listen failed");
+//		close(server_fd);
+//		exit(EXIT_FAILURE);
+//	}
+//
+//	printf("TCP Server listening on port %d...\n", PORT);
+//
+//	// 等待客户端连接
+//	if ((client_fd = accept(server_fd, (struct sockaddr*)&client_addr, &addr_len)) < 0) {
+//		perror("accept failed");
+//		close(server_fd);
+//		exit(EXIT_FAILURE);
+//	}
+//
+//	// 通信
+//	while (1) {
+//		memset(buffer, 0, BUFLEN);
+//		int len = read(client_fd, buffer, BUFLEN);
+//		if (len <= 0) break;
+//
+//		printf("Received from client: %s\n", buffer);
+//		write(client_fd, buffer, len); // 回显
+//	}
+//
+//	close(client_fd);
+//	close(server_fd);
+//	return 0;
+//}
+//class Solution {
+//public:
+//	int strStr(string haystack, string needle)
+//	{
+//		int par_haystack = haystack.size();
+//		int son_needle = needle.size();
+//		for (int i = 0; i < par_haystack - son_needle + 1; i++)
+//		{
+//			int flag = 1;
+//			for (int j = 0; j < son_needle; j++)
+//			{
+//				if (needle[j] != haystack[i + j])
+//				{
+//					flag = 0; break;
+//				}
+//			}
+//			if (flag == 0)
+//				continue;
+//			else
+//				return i;
+//
+//		}
+//		return -1;
+//	}
+//};
+//#include<string>
+//#include<vector>
+//#include<stack>
+//#include <sstream>
+//int Evalate(const vector<string>& expr)
+//{
+//	stack<int> st;
+//	for (auto it = expr.rbegin(); it != expr.rend(); it++)
+//	{
+//		const string& token = *it;
+//		if (token == "+" || token == "-" || token == "*" || token == "/")
+//		{
+//			if (st.size() < 2) return;
+//			int a = st.top(); st.pop();
+//			int b = st.top(); st.pop();
+//			if (token == "+") st.push(a + b);
+//			else if (token == "-") st.push(a - b);
+//			else if (token == "*") st.push(a * b);
+//			else if (token == "/") st.push(a / b);
+//		}
+//		else
+//			st.push(stoi(token));
+//	}
+//	return st.top();
+//}
+//int main()
+//{
+//	vector<string> expr = { "+","3","*","2","4" };
+//	cout << Evalate(expr) << endl;
+//	return 0;
+//}
 
-class Solution {
+//class BaseA
+//{
+//public:
+//	BaseA(char a, int b);
+//	~BaseA();
+//	virtual void show() {};
+//protected:
+//	char m_a;
+//	int m_b;
+//};
+//BaseA::BaseA(char a, int b):m_a(a),m_b(b)
+//{
+//	cout << "BaseA con" << endl;
+//}
+//BaseA::~BaseA() {
+//	cout << "BaseA des" << endl;
+//}
+//class BaseB
+//{
+//public:
+//	BaseB(char c, int d);
+//	~BaseB();
+//	virtual void show() {};
+//protected:
+//	char m_c;
+//	int m_d;
+//};
+//BaseB::BaseB(char c, int d) :m_c(c), m_d(d)
+//{
+//	cout << "BaseB con" << endl;
+//}
+//BaseB::~BaseB() {
+//	cout << "BaseB des" << endl;
+//}
+//
+//class Dervied :public BaseA, public BaseB
+//{
+//public:
+//	Dervied(char a, int b, char c, int d);
+//	~Dervied();
+//public:
+//	virtual void show();
+//};
+//Dervied::Dervied(char a, int b, char c, int d) :BaseA(a, b), BaseB(c, d)
+//{
+//	cout << "Derviced con" << endl;
+//}
+//Dervied::~Dervied()
+//{
+//	cout <<"Dervied des" << endl;
+//}
+//void Dervied::show()
+//{
+//	cout << m_a << "," << m_b << "," << m_c << "," << m_d << endl;
+//}
+//int main()
+//{
+//	Dervied obj(1, 2, 3, 4);
+//	obj.show();
+//	cout << sizeof(Dervied) << endl;
+//	return 0;
+//}
+
+//#include <iostream>     
+//
+//struct A {
+//	A() { foo(); }
+//	virtual ~A() { foo(); }
+//	virtual void foo() { std::cout << "1"; }
+//	void bar() { foo(); }
+//};
+//
+//struct B : public A {
+//	virtual void foo() { std::cout << "2"; }
+//};
+//
+//int main() {
+//	B b;
+//	b.bar();
+//}
+#include <iostream>
+
+class Base {
 public:
-	string longestCommonPrefix(vector<string>& strs)
-	{
-		string result;
-		int size = strs.size();
-		int pos = 0;
-		int i = 0;
-		int minlength = strs[0].size();
-		for (int j = 1; j < size; ++j)
-		{
-			if (strs[j].size() < minlength)
-				minlength = strs[j].size();
-		}
-		while (pos < minlength)
-		{
-			bool judge = true;
-			for (i = 0; i < size - 1; i++)
-			{
-				if (strs[i][pos] != strs[i + 1][pos])
-				{
-					judge = false;
-					return result;
-				}
-			}
-			result += strs[i][pos++];
-		}
-		return result;
+	virtual void display(int i = 5) {
+		std::cout << "Base: " << i << std::endl;
 	}
 };
 
-class Solution {
+class Derived : public Base {
 public:
-	bool isValid(string s) {
-		stack<char> stk;
-		for (int i = 0; i < s.size(); i++) {
-			if (s[i] == '(')
-				stk.push(')');
-			else if (s[i] == '[')
-				stk.push(']');
-			else if (s[i] == '{')
-				stk.push('}');
-			else if (!stk.empty() && s[i] == stk.top()) {
-				stk.pop();
-			}
-			else {
-				return false;
-			}
-		}
-		return stk.empty();
+	virtual void display(int i = 9) override {
+		std::cout << "Derived: " << i << std::endl;
 	}
 };
-
-void* my_memcpy(void* dest, const void* src, size_t n) {
-	char* d = (char*)dest;
-	const char* s = (const char*)src;
-
-	while (n--) {
-		*d++ = *s++;
-	}
-	return dest;
-}
-// packet.h
-#pragma once
-#include <cstring>
-#include <arpa/inet.h>
-
-struct Packet {
-	int id;
-	float value;
-	char name[32];
-
-	void serialize(char* buffer) const {
-		int offset = 0;
-		int net_id = htonl(id);
-		memcpy(buffer + offset, &net_id, sizeof(net_id));
-		offset += sizeof(net_id);
-
-		uint32_t float_bits;
-		memcpy(&float_bits, &value, sizeof(value));
-		float_bits = htonl(float_bits);
-		memcpy(buffer + offset, &float_bits, sizeof(float_bits));
-		offset += sizeof(float_bits);
-
-		memcpy(buffer + offset, name, sizeof(name));
-	}
-
-	static Packet deserialize(const char* buffer) {
-		Packet p;
-		int offset = 0;
-
-		int net_id;
-		memcpy(&net_id, buffer + offset, sizeof(net_id));
-		p.id = ntohl(net_id);
-		offset += sizeof(net_id);
-
-		uint32_t float_bits;
-		memcpy(&float_bits, buffer + offset, sizeof(float_bits));
-		float_bits = ntohl(float_bits);
-		memcpy(&p.value, &float_bits, sizeof(p.value));
-		offset += sizeof(float_bits);
-
-		memcpy(p.name, buffer + offset, sizeof(p.name));
-		return p;
-	}
-};
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
-#include <arpa/inet.h>
-
-#define PORT 8888
-#define BUFLEN 1024
 
 int main() {
-	int server_fd, client_fd;
-	struct sockaddr_in server_addr, client_addr;
-	char buffer[BUFLEN];
-	socklen_t addr_len = sizeof(client_addr);
+	Base* a = new Base();
+	a->display();
 
-	// 创建 socket
-	if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
-		perror("socket creation failed");
-		exit(EXIT_FAILURE);
-	}
+	Base* b = new Derived();
+	b->display();
 
-	// 设置服务器地址
-	server_addr.sin_family = AF_INET;
-	server_addr.sin_addr.s_addr = INADDR_ANY; // 监听所有 IP
-	server_addr.sin_port = htons(PORT);
-
-	// 绑定端口
-	if (bind(server_fd, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
-		perror("bind failed");
-		close(server_fd);
-		exit(EXIT_FAILURE);
-	}
-
-	// 开始监听
-	if (listen(server_fd, 5) < 0) {
-		perror("listen failed");
-		close(server_fd);
-		exit(EXIT_FAILURE);
-	}
-
-	printf("TCP Server listening on port %d...\n", PORT);
-
-	// 等待客户端连接
-	if ((client_fd = accept(server_fd, (struct sockaddr*)&client_addr, &addr_len)) < 0) {
-		perror("accept failed");
-		close(server_fd);
-		exit(EXIT_FAILURE);
-	}
-
-	// 通信
-	while (1) {
-		memset(buffer, 0, BUFLEN);
-		int len = read(client_fd, buffer, BUFLEN);
-		if (len <= 0) break;
-
-		printf("Received from client: %s\n", buffer);
-		write(client_fd, buffer, len); // 回显
-	}
-
-	close(client_fd);
-	close(server_fd);
-	return 0;
+	Derived* c = new Derived();
+	c->display();
 }
-class Solution {
-public:
-	int strStr(string haystack, string needle)
-	{
-		int par_haystack = haystack.size();
-		int son_needle = needle.size();
-		for (int i = 0; i < par_haystack - son_needle + 1; i++)
-		{
-			int flag = 1;
-			for (int j = 0; j < son_needle; j++)
-			{
-				if (needle[j] != haystack[i + j])
-				{
-					flag = 0; break;
-				}
-			}
-			if (flag == 0)
-				continue;
-			else
-				return i;
-
-		}
-		return -1;
-	}
-};
