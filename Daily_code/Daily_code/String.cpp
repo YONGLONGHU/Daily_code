@@ -383,3 +383,18 @@ bool hasCycle(ListNode* head)
 	}
 	return false;
 }
+class Solution {
+public:
+	bool hasCycle(ListNode* head)
+	{
+		unordered_set<ListNode*> temp;
+		while (head != nullptr)
+		{
+			if (temp.count(head))
+				return true;
+			temp.insert(head);
+			head = head->next;
+		}
+		return false;
+	}
+};
