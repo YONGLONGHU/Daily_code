@@ -398,3 +398,94 @@ public:
 		return false;
 	}
 };
+
+//class Singleton
+//{
+//public:
+//	Singleton& GetInstance()
+//	{
+//		return ins;
+//	}
+//	Singleton(const Singleton&) = delete;
+//	Singleton& operator=(const Singleton&) = delete;
+//private:
+//	Singleton(){}
+//	static Singleton ins;
+//};
+//Singleton Singleton::ins;
+//
+//class Singleton
+//{
+//public:
+//	static Singleton* GetInstance()
+//	{
+//		if (instance != nullptr)
+//		{
+//			mtx.lock();
+//			if (instance == nullptr)
+//				instance = new Singleton();
+//			mtx.unlock();
+//		}
+//		return instance;
+//	}
+//	Singleton(const Singleton&) = delete;
+//	Singleton& operator=(const Singleton&) = delete;
+//private:
+//	Singleton() {};
+//	static Singleton* instance;
+//	static pthread_t_mutex mtx;
+//};
+//Singleton* Singleton::instance = nullptr;
+//pthread_t_mutex Singleton :: mtx;
+
+class Singleton
+{
+public:
+	static Singleton& Getinstance()
+	{
+		return instance;
+	}
+	Singleton(const Singleton&) = delete;
+	Singleton& operator=(const Singleton&) = delete;
+private:
+	Singleton(){}
+	static Singleton instance;
+};
+Singleton Singleton::instance;
+
+class Singleton
+{
+	static Singleton* GetInstance()
+	{
+		if (instance == nullptr)
+		{
+			mtx.lock();
+			if (instance == nullptr)
+				instance = new Singleton();
+			mtx.unlock();
+		}
+		return instance;
+	}
+	Singleton(const Singleton&) = delete;
+	Singleton& operator=(const Singleton&) = delete;
+private:
+	Singleton(){}
+	static Singleton* instance;
+	static pthread_mute_t mtx;
+};
+Singleton* Singleton::instance = nullptr;
+pthread_mute_t Singleton::mtx;
+
+class Singleton
+{
+public:
+	static Singleton& GetInstance()
+	{
+		return instance;
+	}
+	Singleton(const Singleton&) = delete;
+	Singleton& operator=(const Singleton&) = delete;
+private:
+	Singleton();
+	static Singleton instance;
+};
