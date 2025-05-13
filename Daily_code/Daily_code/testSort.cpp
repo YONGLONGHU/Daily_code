@@ -1050,213 +1050,213 @@ void PreOrder(TreeNode* root,vector<int>& result)
 			s.push(temp->left);
 	}
 }
-int main1()
-{
-	vector<int> result;
-	TreeNode* root = new TreeNode(1);
-	root->left = new TreeNode(2);
-	root->right = new TreeNode(4);
-	root->left->left = new TreeNode(7);
-	root->right->left = new TreeNode(6);
-	root->left->right = new TreeNode(7);
-	root->right->right = new TreeNode(6);
-	PreOrder(root, result);
-	for (auto& e : result)
-		cout << e << " ";
-	return 0;
-}
+//int main1()
+//{
+//	vector<int> result;
+//	TreeNode* root = new TreeNode(1);
+//	root->left = new TreeNode(2);
+//	root->right = new TreeNode(4);
+//	root->left->left = new TreeNode(7);
+//	root->right->left = new TreeNode(6);
+//	root->left->right = new TreeNode(7);
+//	root->right->right = new TreeNode(6);
+//	PreOrder(root, result);
+//	for (auto& e : result)
+//		cout << e << " ";
+//	return 0;
+//}
+//
+//typedef struct ListNode
+//{
+//	int val;
+//	struct ListNode* next;
+//	ListNode(int x):val(x),next(nullptr){}
+//}ListNode;
+//ListNode* TwoMeet(ListNode* head1, ListNode* head2)
+//{
+//	ListNode* cur1 = head1;
+//	ListNode* cur2 = head2;
+//	while (head1!= head2)
+//	{
+//		head1 = head1 == nullptr ? cur2 : head1->next;
+//		head2 = head2 == nullptr ? cur1 : head2->next;
+//	}
+//	return head1;
+//}
+//int main2()
+//{
+//	ListNode* temp = nullptr;
+//	ListNode* head1 = new ListNode(1);
+//	head1->next = new ListNode(2);
+//	temp = head1->next;
+//	head1->next->next = new ListNode(20);
+//	ListNode* head2 = new ListNode(10);
+//	head2->next = new ListNode(22);
+//	head2->next->next = temp;
+//	//返回相遇的节点的地址
+//	ListNode* meet= TwoMeet(head1, head2);
+//	cout << meet->val<<endl;
+//	return 0;
+//}
+//ListNode* PostVal(ListNode* head,int k)
+//{
+//	ListNode* fast = head;
+//	ListNode* slow = head;
+//	for (int i = 0; i <= k; i++)
+//		fast = fast->next;
+//	while (fast != nullptr)
+//	{
+//		fast = fast->next;
+//		slow = slow->next;
+//	}
+//	return slow->next;
+//}
+//int main4()
+//{
+//	ListNode* head = new ListNode(1);
+//	ListNode* h = head;
+//	int k = 4;
+//	for (int i = 0; i < 10; i++)
+//	{
+//		head->next = new ListNode(i + 2);
+//		head = head->next;
+//	}
+//	ListNode* result = PostVal(h, k);
+//	cout << result->val<<endl;
+//	return 0;
+//}
+//
+//bool HasCycle(ListNode* head)
+//{
+//	if (head == nullptr || head->next == nullptr)
+//		return false;
+//	ListNode* fast = head;
+//	ListNode* slow = head;
+//	while (fast!=nullptr&&fast->next!=nullptr)
+//	{
+//		fast = fast->next->next;
+//		slow = slow->next;
+//		if (slow == fast)
+//			return true;
+//	}
+//	return false;
+//}
+//ListNode* mergeTwoLists(ListNode* list1, ListNode* list2)
+//{
+//	ListNode* duryy = new ListNode(-1);
+//	ListNode* pre = duryy;
+//	while (list1 != nullptr && list2 != nullptr)
+//	{
+//		if (list1->val < list2->val)
+//		{
+//			pre->next = list1;
+//			list1 = list1->next;
+//			pre = pre->next;
+//		}
+//		else
+//		{
+//			pre->next = list2;
+//			list2 = list2->next;
+//			pre = pre->next;
+//		}
+//	}
+//	if (list1 == nullptr)
+//	{
+//		pre->next = list2;
+//		return duryy;
+//	}
+//	else
+//	{
+//		pre->next = list1;
+//		return duryy;
+//	}
+//}
 
-typedef struct ListNode
-{
-	int val;
-	struct ListNode* next;
-	ListNode(int x):val(x),next(nullptr){}
-}ListNode;
-ListNode* TwoMeet(ListNode* head1, ListNode* head2)
-{
-	ListNode* cur1 = head1;
-	ListNode* cur2 = head2;
-	while (head1!= head2)
-	{
-		head1 = head1 == nullptr ? cur2 : head1->next;
-		head2 = head2 == nullptr ? cur1 : head2->next;
-	}
-	return head1;
-}
-int main2()
-{
-	ListNode* temp = nullptr;
-	ListNode* head1 = new ListNode(1);
-	head1->next = new ListNode(2);
-	temp = head1->next;
-	head1->next->next = new ListNode(20);
-	ListNode* head2 = new ListNode(10);
-	head2->next = new ListNode(22);
-	head2->next->next = temp;
-	//返回相遇的节点的地址
-	ListNode* meet= TwoMeet(head1, head2);
-	cout << meet->val<<endl;
-	return 0;
-}
-ListNode* PostVal(ListNode* head,int k)
-{
-	ListNode* fast = head;
-	ListNode* slow = head;
-	for (int i = 0; i <= k; i++)
-		fast = fast->next;
-	while (fast != nullptr)
-	{
-		fast = fast->next;
-		slow = slow->next;
-	}
-	return slow->next;
-}
-int main4()
-{
-	ListNode* head = new ListNode(1);
-	ListNode* h = head;
-	int k = 4;
-	for (int i = 0; i < 10; i++)
-	{
-		head->next = new ListNode(i + 2);
-		head = head->next;
-	}
-	ListNode* result = PostVal(h, k);
-	cout << result->val<<endl;
-	return 0;
-}
+//ListNode* removeNthFromEnd(ListNode* head,int n)
+//{
+//	if (head == nullptr)
+//		return head;
+//	ListNode* dummy=new ListNode(-1);
+//	dummy -> next = head;
+//	ListNode* fast = dummy;
+//	ListNode* slow = dummy;
+//	for (int i = 0; i < n; i++)
+//	{
+//		if (fast->next == nullptr)
+//			return head;
+//		fast = fast->next;
+//	}
+//	while (fast->next != nullptr)
+//	{
+//		fast = fast->next;
+//		slow = slow->next;
+//	}
+//	ListNode* temp = slow->next;
+//	slow->next = temp->next;
+//	temp->next = nullptr;
+//	delete temp;
+//	delete dummy;
+//	return head;
+//}
+//ListNode* swapPairs(ListNode* head) {
+//	if (head == nullptr || head->next == nullptr) {
+//		return head;
+//	}
+//
+//	// 创建一个虚拟节点，作为新头节点
+//	ListNode* dummy = new ListNode(0);
+//	dummy->next = head;
+//
+//	ListNode* prev = dummy;
+//	ListNode* current = head;
+//
+//	while (current != nullptr && current->next != nullptr) {
+//		ListNode* nextNode = current->next->next;  // 保留下一个节点
+//		ListNode* second = current->next;  // 第二个节点
+//
+//		// 交换当前的两个节点
+//		prev->next = second;
+//		second->next = current;
+//		current->next = nextNode;
+//
+//		// 更新prev和current
+//		prev = current;
+//		current = nextNode;
+//	}
+//
+//	return dummy->next;  // 返回新的头节点
+//}
+//void inorder(TreeNode* root, vector<int> &res)
+//{
+//	if (root == nullptr)
+//		return;
+//	inorder(root->left, res);
+//	res.push_back(root->val);
+//	inorder(root->right, res);
+//}
+//vector<int> Inorder(TreeNode* root)
+//{
+//	vector<int> res;
+//	inorder(root, res);
+//	return res;
+//}
 
-bool HasCycle(ListNode* head)
-{
-	if (head == nullptr || head->next == nullptr)
-		return false;
-	ListNode* fast = head;
-	ListNode* slow = head;
-	while (fast!=nullptr&&fast->next!=nullptr)
-	{
-		fast = fast->next->next;
-		slow = slow->next;
-		if (slow == fast)
-			return true;
-	}
-	return false;
-}
-ListNode* mergeTwoLists(ListNode* list1, ListNode* list2)
-{
-	ListNode* duryy = new ListNode(-1);
-	ListNode* pre = duryy;
-	while (list1 != nullptr && list2 != nullptr)
-	{
-		if (list1->val < list2->val)
-		{
-			pre->next = list1;
-			list1 = list1->next;
-			pre = pre->next;
-		}
-		else
-		{
-			pre->next = list2;
-			list2 = list2->next;
-			pre = pre->next;
-		}
-	}
-	if (list1 == nullptr)
-	{
-		pre->next = list2;
-		return duryy;
-	}
-	else
-	{
-		pre->next = list1;
-		return duryy;
-	}
-}
-
-ListNode* removeNthFromEnd(ListNode* head,int n)
-{
-	if (head == nullptr)
-		return head;
-	ListNode* dummy=new ListNode(-1);
-	dummy -> next = head;
-	ListNode* fast = dummy;
-	ListNode* slow = dummy;
-	for (int i = 0; i < n; i++)
-	{
-		if (fast->next == nullptr)
-			return head;
-		fast = fast->next;
-	}
-	while (fast->next != nullptr)
-	{
-		fast = fast->next;
-		slow = slow->next;
-	}
-	ListNode* temp = slow->next;
-	slow->next = temp->next;
-	temp->next = nullptr;
-	delete temp;
-	delete dummy;
-	return head;
-}
-ListNode* swapPairs(ListNode* head) {
-	if (head == nullptr || head->next == nullptr) {
-		return head;
-	}
-
-	// 创建一个虚拟节点，作为新头节点
-	ListNode* dummy = new ListNode(0);
-	dummy->next = head;
-
-	ListNode* prev = dummy;
-	ListNode* current = head;
-
-	while (current != nullptr && current->next != nullptr) {
-		ListNode* nextNode = current->next->next;  // 保留下一个节点
-		ListNode* second = current->next;  // 第二个节点
-
-		// 交换当前的两个节点
-		prev->next = second;
-		second->next = current;
-		current->next = nextNode;
-
-		// 更新prev和current
-		prev = current;
-		current = nextNode;
-	}
-
-	return dummy->next;  // 返回新的头节点
-}
-void inorder(TreeNode* root, vector<int> &res)
-{
-	if (root == nullptr)
-		return;
-	inorder(root->left, res);
-	res.push_back(root->val);
-	inorder(root->right, res);
-}
-vector<int> Inorder(TreeNode* root)
-{
-	vector<int> res;
-	inorder(root, res);
-	return res;
-}
-
-#include<unordered_map>
-#include<algorithm>
-vector<vector<string>> groupAnagrams(vector<string>& strs)
-{
-	unordered_map<string, vector<string>> data;
-	for (auto& e : strs)
-	{
-		string str = e;
-		sort(str.begin(), str.end());
-		data[str].push_back(e);
-	}
-	vector<vector<string>> ans;
-	for (auto& pair : data)
-		ans.push_back(pair.second);
-	return ans;
-}
+//#include<unordered_map>
+//#include<algorithm>
+//vector<vector<string>> groupAnagrams(vector<string>& strs)
+//{
+//	unordered_map<string, vector<string>> data;
+//	for (auto& e : strs)
+//	{
+//		string str = e;
+//		sort(str.begin(), str.end());
+//		data[str].push_back(e);
+//	}
+//	vector<vector<string>> ans;
+//	for (auto& pair : data)
+//		ans.push_back(pair.second);
+//	return ans;
+//}
 
 //#include<cctype>
 //int main()
@@ -1668,13 +1668,13 @@ public:
 	}
 };
 
-int main() {
-	Base* a = new Base();
-	a->display();
-
-	Base* b = new Derived();
-	b->display();
-
-	Derived* c = new Derived();
-	c->display();
-}
+//int main() {
+//	Base* a = new Base();
+//	a->display();
+//
+//	Base* b = new Derived();
+//	b->display();
+//
+//	Derived* c = new Derived();
+//	c->display();
+//}
