@@ -1,3 +1,6 @@
 ﻿  test.cpp
-D:\BaiduNetdiskDownload\Daily_code\Daily_code\Daily_code\test.cpp(13,23): warning C4018: “<”: 有符号/无符号不匹配
+D:\BaiduNetdiskDownload\Daily_code\Daily_code\Daily_code\test.cpp(35,20): warning C4018: “<”: 有符号/无符号不匹配
+D:\BaiduNetdiskDownload\Daily_code\Daily_code\Daily_code\test.cpp(44,28): warning C4018: “<”: 有符号/无符号不匹配
+D:\BaiduNetdiskDownload\Daily_code\Daily_code\Daily_code\test.cpp(61,20): warning C4018: “<”: 有符号/无符号不匹配
+D:\BaiduNetdiskDownload\Daily_code\Daily_code\Daily_code\test.cpp(127,20): warning C4018: “<”: 有符号/无符号不匹配
   Daily_code.vcxproj -> D:\BaiduNetdiskDownload\Daily_code\Daily_code\Debug\Daily_code.exe
