@@ -317,3 +317,69 @@ vector<int> topKFrenquent(vector<int>& nums, int k)
 	}
 	return result;
 }
+
+//class Student;
+//class Person
+//{
+//public:
+//	friend void Display(const Person& p, const Student& s);
+//protected:
+//	string _name; // ÐÕÃû
+//};
+//class Student : public Person
+//{
+//protected:
+//	int _stuNum; // Ñ§ºÅ
+//};
+//void Display(const Person& p, const Student& s)
+//{
+//	cout << p._name << endl;
+//	cout << s._stuNum << endl;
+//}
+//void main()
+//{
+//	Person p;
+//	Student s;
+//	Display(p, s);
+//}
+//struct compare
+//{
+//	bool operator()(const node& node1, const node& node2)
+//	{
+//		return node1.aa > node2.aa;
+//	}
+//};
+//struct node
+//{
+//	string ss;
+//	int aa;
+//	node(const char* sss,int a):ss(sss),aa(a){}
+//};
+//int main()
+//{
+//	vector<node> nums{ {"sdfg",21},{"sfg",23},{"sdfdg",28},{"sdsg",28} };
+//	sort(nums.begin(), nums.end(), compare);
+//}
+
+template<class T>
+class unique_ptr
+{
+	unique_ptr(T* ptr=nullptr):_ptr(ptr){}
+	~unique_ptr()
+	{
+		if (_ptr)
+			delete ptr;
+	}
+	unique_ptr(const unique_ptr<T>& p1) = delete;
+	unique_ptr<T>& operator*(const unique_ptr<int>& p1) = delete;
+	T& operator*()
+	{
+		return *_ptr;
+	}
+	T* operator->()
+	{
+		return _ptr;
+	}
+private:
+	T* _ptr;
+};
