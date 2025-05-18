@@ -383,3 +383,35 @@ class unique_ptr
 private:
 	T* _ptr;
 };
+
+int main1()
+{
+	//static_cast
+	double d = 12.34;
+	int a = static_cast<int>(d);
+	cout << a << endl;
+
+	//reinterpret_cast
+	int* p = reinterpret_cast<int*>(a);
+
+	//const_cast
+	const int b = 2;
+	int* p = const_cast<int*>(&a);
+	*p = 3;
+	return 0;
+}
+class A
+{
+public:
+	virtual void f() {}
+};
+class B : public A
+{};
+void fun(A* pa)
+{
+	// dynamic_cast会先检查是否能转换成功，能成功则转换，不能则返回
+	B* pb1 = static_cast<B*>(pa);
+	B* pb2 = dynamic_cast<B*>(pa);
+	cout << "pb1:" << pb1 << endl;
+	cout << "pb2:" << pb2 << endl;
+}
