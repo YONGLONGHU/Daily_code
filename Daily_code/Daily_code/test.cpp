@@ -361,57 +361,93 @@ vector<int> topKFrenquent(vector<int>& nums, int k)
 //	sort(nums.begin(), nums.end(), compare);
 //}
 
-template<class T>
-class unique_ptr
-{
-	unique_ptr(T* ptr=nullptr):_ptr(ptr){}
-	~unique_ptr()
-	{
-		if (_ptr)
-			delete ptr;
-	}
-	unique_ptr(const unique_ptr<T>& p1) = delete;
-	unique_ptr<T>& operator*(const unique_ptr<int>& p1) = delete;
-	T& operator*()
-	{
-		return *_ptr;
-	}
-	T* operator->()
-	{
-		return _ptr;
-	}
-private:
-	T* _ptr;
-};
+//template<class T>
+//class unique_ptr
+//{
+//	unique_ptr(T* ptr=nullptr):_ptr(ptr){}
+//	~unique_ptr()
+//	{
+//		if (_ptr)
+//			delete ptr;
+//	}
+//	unique_ptr(const unique_ptr<T>& p1) = delete;
+//	unique_ptr<T>& operator*(const unique_ptr<int>& p1) = delete;
+//	T& operator*()
+//	{
+//		return *_ptr;
+//	}
+//	T* operator->()
+//	{
+//		return _ptr;
+//	}
+//private:
+//	T* _ptr;
+//};
+//
+//int main1()
+//{
+//	//static_cast
+//	double d = 12.34;
+//	int a = static_cast<int>(d);
+//	cout << a << endl;
+//
+//	//reinterpret_cast
+//	int* p = reinterpret_cast<int*>(a);
+//
+//	//const_cast
+//	const int b = 2;
+//	int* p = const_cast<int*>(&a);
+//	*p = 3;
+//	return 0;
+//}
+//class A
+//{
+//public:
+//	virtual void f() {}
+//};
+//class B : public A
+//{};
+//void fun(A* pa)
+//{
+//	// dynamic_cast会先检查是否能转换成功，能成功则转换，不能则返回
+//	B* pb1 = static_cast<B*>(pa);
+//	B* pb2 = dynamic_cast<B*>(pa);
+//	cout << "pb1:" << pb1 << endl;
+//	cout << "pb2:" << pb2 << endl;
+//}
 
-int main1()
-{
-	//static_cast
-	double d = 12.34;
-	int a = static_cast<int>(d);
-	cout << a << endl;
-
-	//reinterpret_cast
-	int* p = reinterpret_cast<int*>(a);
-
-	//const_cast
-	const int b = 2;
-	int* p = const_cast<int*>(&a);
-	*p = 3;
-	return 0;
-}
-class A
+class String
 {
 public:
-	virtual void f() {}
+	String(const char* ptr = " ")
+	{
+		_ptr = new char[strlen(ptr)+1];
+		strcpy(_ptr, ptr);
+	}
+	String(const String& s)
+	{
+		_ptr = new char[strlen(s._ptr) + 1];
+		strcpy(_ptr, s._ptr);
+	}
+	String& operator=(const String&s)
+	{
+		if (s._ptr != _ptr)
+		{
+			delete[]_ptr;
+			_ptr = nullptr;
+			_ptr = new char[strlen(s._ptr) + 1];
+			strcpy(_ptr, s._ptr);
+		}
+		return *this;
+	}
+	~String()
+	{
+		if (_ptr)
+		{
+			delete[] _ptr;
+			_ptr = nullptr;
+		}
+	}
+private:
+	char* _ptr;
 };
-class B : public A
-{};
-void fun(A* pa)
-{
-	// dynamic_cast会先检查是否能转换成功，能成功则转换，不能则返回
-	B* pb1 = static_cast<B*>(pa);
-	B* pb2 = dynamic_cast<B*>(pa);
-	cout << "pb1:" << pb1 << endl;
-	cout << "pb2:" << pb2 << endl;
-}
