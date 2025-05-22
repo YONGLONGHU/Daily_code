@@ -513,3 +513,89 @@ using namespace std;
 //	cout << result << endl;
 //	return 0;
 //}
+//int FindSecondMax(const vector<int>& nums)
+//{
+//	int max1 = INT_MIN;
+//	int max2 = INT_MIN;
+//	for (auto& e : nums)
+//	{
+//		if (e > max1)
+//		{
+//			max2 = max1;
+//			max1 = e;
+//		}
+//		else if (e > max2 && e < max1)
+//		{
+//			max2 = e;
+//		}
+//	}
+//	if (max2 == INT_MIN)
+//		return -1;
+//	return max2;
+//}
+//1、最长回文子串
+//2、最长字串
+//3、排序去重
+//void Nosort(vector<int>& nums)
+//{
+//	sort(nums.begin(), nums.end());
+//	int count = 1;
+//	int size = nums.size();
+//	for (int i = 1; i < size; ++i)
+//	{
+//		if (nums[count - 1] != nums[i])
+//		{
+//			nums[count] = nums[i];
+//			count++;
+//		}
+//	}
+//	nums.resize(count);
+//}
+//#include<unordered_set>
+//string LongestStr(string str)
+//{
+//	unordered_set<char> set;
+//	int size = str.size();
+//	int left = 0, right = 0;
+//	int maxlen = 0;
+//	int start = 0;
+//	while (right < size)
+//	{
+//		if(left!=0)
+//			str.erase(str[left-1]);
+//		while (set.count(str[right]) == 0 && right < size)
+//		{
+//			set.insert(str[left]);
+//			left++;
+//		}
+//		int len = left - right;
+//		if (len > maxlen)
+//		{
+//			maxlen = len;
+//			start = left;
+//		}
+//	}
+//	left++;
+//	return str.substr(start, maxlen);
+//}
+//void Center_Expend(string& str, int& start, int& maxlen, int left, int right)
+//{
+//	while (left >= 0 && right < str.size() && str[left] == str[right])
+//	{
+//		left--; right++;
+//	}
+//	maxlen = right - left + 1 > maxlen ? right - left + 1 : maxlen,
+//	start = left + 1;
+//}
+//string HWStr(string str)
+//{
+//	int size = str.size();
+//	int start = 0;
+//	int maxlen = 0;
+//	for (int i = 0; i < size; ++i)
+//	{
+//		Center_Expend(str, start, maxlen, i, i);
+//		Center_Expend(str, start, maxlen, i, i+1);
+//	}
+//	return str.substr();
+//}
