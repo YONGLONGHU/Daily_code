@@ -533,6 +533,45 @@ using namespace std;
 //		return -1;
 //	return max2;
 //}
+//int FindSecond(vector<int> nums)
+//{
+//	int size = nums.size();
+//	int largest = INT_MIN;
+//	int second = INT_MIN;
+//	for (int i = 0; i < size; i++)
+//	{
+//		if (nums[i] > largest)
+//		{
+//			second = largest;
+//			largest = nums[i];
+//		}
+//		else if (nums[i] > second && nums[i] != largest)
+//			second = nums[i];
+//	}
+//	if (second == INT_MIN)
+//		return -1;
+//	return second;
+//}
+//int main()
+//{
+//	vector<int> nums{ 23,43,44,33,23,345,23 };
+//	int second = FindSecond(nums);
+//	cout << second << endl;
+//	return 0;
+//}
+//int MaxTemp(vector<int> nums)
+//{
+//	int largest = INT_MIN;
+//	int temp = 0;
+//	for (auto& e : nums)
+//	{
+//		if (e > largest)
+//			largest = e;
+//		temp = largest - e > temp ? largest - e : temp;
+//	}
+//	return temp;
+//}
+
 //1、最长回文子串
 //2、最长字串
 //3、排序去重
