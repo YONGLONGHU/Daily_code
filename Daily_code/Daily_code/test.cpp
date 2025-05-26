@@ -617,24 +617,50 @@ using namespace std;
 //	left++;
 //	return str.substr(start, maxlen);
 //}
-//void Center_Expend(string& str, int& start, int& maxlen, int left, int right)
-//{
-//	while (left >= 0 && right < str.size() && str[left] == str[right])
-//	{
-//		left--; right++;
-//	}
-//	maxlen = right - left + 1 > maxlen ? right - left + 1 : maxlen,
-//	start = left + 1;
-//}
-//string HWStr(string str)
-//{
-//	int size = str.size();
-//	int start = 0;
-//	int maxlen = 0;
-//	for (int i = 0; i < size; ++i)
-//	{
-//		Center_Expend(str, start, maxlen, i, i);
-//		Center_Expend(str, start, maxlen, i, i+1);
-//	}
-//	return str.substr();
-//}
+void Center_Expend(string& str, int& start, int& maxlen, int left, int right)
+{
+	while (left >= 0 && right < str.size() && str[left] == str[right])
+	{
+		left--; right++;
+	}
+	maxlen = right - left - 1 > maxlen ? right - left - 1 : maxlen,
+	start = left + 1;
+}
+string HWStr(string str)
+{
+	int size = str.size();
+	int start = 0;
+	int maxlen = 0;
+	for (int i = 0; i < size; ++i)
+	{
+		Center_Expend(str, start, maxlen, i, i);
+		Center_Expend(str, start, maxlen, i, i+1);
+	}
+	return str.substr(start,maxlen);
+}
+#include<unordered_set>
+string lengthoflongeststring(string s)
+{
+	unordered_set<char> occ;
+	int start = 0;
+	int size = s.size();
+	int maxlen = 1;
+	int right = 0;
+	for (int i = 0; i < size; ++i)
+	{
+		if (i != 0)
+			occ.erase(s[i]);
+		while (right < size && !occ.count(s[right]))
+		{
+			occ.insert(s[right]);
+			right++;
+		}
+		int len = right - i;
+		if (len > maxlen)
+		{
+			maxlen = len;
+			start = i;
+		}
+		return s.substr(start, maxlen);
+	}
+}
