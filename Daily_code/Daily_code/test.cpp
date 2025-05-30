@@ -664,22 +664,79 @@ string lengthoflongeststring(string s)
 		return s.substr(start, maxlen);
 	}
 }
-bool isValidBST(TreeNode* root) {
-	stack<TreeNode*> stack;
-	long long inorder = (long long)INT_MIN - 1;
-
-	while (!stack.empty() || root != nullptr) {
-		while (root != nullptr) {
-			stack.push(root);
-			root = root->left;
+//bool isValidBST(TreeNode* root) {
+//	stack<TreeNode*> stack;
+//	long long inorder = (long long)INT_MIN - 1;
+//
+//	while (!stack.empty() || root != nullptr) {
+//		while (root != nullptr) {
+//			stack.push(root);
+//			root = root->left;
+//		}
+//		root = stack.top();
+//		stack.pop();
+//		if (root->val <= inorder) {
+//			return false;
+//		}
+//		inorder = root->val;
+//		root = root->right;
+//	}
+//	return true;
+//}
+//#include<stack>
+//typedef struct TreeNode
+//{
+//	int val;
+//	TreeNode* left;
+//	TreeNode* right;
+//	TreeNode(int x):val(x),left(nullptr),right(nullptr){}
+//}TreeNode;
+//
+//bool IsValidBST(TreeNode* root)
+//{
+//	stack<TreeNode*> st;
+//	int prenode = INT_MIN;
+//	while (root || !st.empty())
+//	{
+//		while (root)
+//		{
+//			st.push(root);
+//			root = root->left;
+//		}
+//		root = st.top();
+//		st.pop();
+//		if (root->val < prenode)
+//			return false;
+//		prenode = root->val;
+//		root = root->right;
+//	}
+//	return true;
+//}
+//
+class Solution {
+public:
+	string addBinary(string a, string b)
+	{
+		int i = a.size() - 1;
+		int j = b.size() - 1;
+		int carry = 0;
+		string result = "";
+		while (i >= 0 || j >= 0 || carry > 0)
+		{
+			int sum = carry;
+			if (i >= 0)
+			{
+				sum += a[i] - '0';
+				i--;
+			}
+			if (j >= 0)
+			{
+				sum += b[j] - '0';
+				j--;
+			}
+			result = to_string(sum % 2) + result;
+			carry = sum / 2;
 		}
-		root = stack.top();
-		stack.pop();
-		if (root->val <= inorder) {
-			return false;
-		}
-		inorder = root->val;
-		root = root->right;
+		return result;
 	}
-	return true;
-}
+};
