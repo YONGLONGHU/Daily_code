@@ -713,30 +713,67 @@ string lengthoflongeststring(string s)
 //	return true;
 //}
 //
+//class Solution {
+//public:
+//	string addBinary(string a, string b)
+//	{
+//		int i = a.size() - 1;
+//		int j = b.size() - 1;
+//		int carry = 0;
+//		string result = "";
+//		while (i >= 0 || j >= 0 || carry > 0)
+//		{
+//			int sum = carry;
+//			if (i >= 0)
+//			{
+//				sum += a[i] - '0';
+//				i--;
+//			}
+//			if (j >= 0)
+//			{
+//				sum += b[j] - '0';
+//				j--;
+//			}
+//			result = to_string(sum % 2) + result;
+//			carry = sum / 2;
+//		}
+//		return result;
+//	}
+//};
+//
+//class Solution {
+//public:
+//	int singleNumber(vector<int>& nums)
+//	{
+//		int result = 0;
+//		for (int num : nums)
+//			result ^= num;
+//		return result;
+//	}
+//};
+
+#include <vector>
+
 class Solution {
 public:
-	string addBinary(string a, string b)
-	{
-		int i = a.size() - 1;
-		int j = b.size() - 1;
-		int carry = 0;
-		string result = "";
-		while (i >= 0 || j >= 0 || carry > 0)
-		{
-			int sum = carry;
-			if (i >= 0)
-			{
-				sum += a[i] - '0';
-				i--;
+	int singleNumber(std::vector<int>& nums) {
+		int result = 0;
+
+		// 遍历每一位（假设是32位整数）
+		for (int i = 0; i < 32; ++i) {
+			int sum = 0;
+
+			// 统计所有数字在第i位上的1的个数
+			for (int num : nums) {
+				sum += (num >> i) & 1;
 			}
-			if (j >= 0)
-			{
-				sum += b[j] - '0';
-				j--;
+
+			// 如果模3不为0，说明只出现一次的数字在该位上是1
+			if (sum % 3 != 0) {
+				result |= (1 << i);
 			}
-			result = to_string(sum % 2) + result;
-			carry = sum / 2;
 		}
+
 		return result;
 	}
 };
