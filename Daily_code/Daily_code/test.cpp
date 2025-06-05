@@ -18,7 +18,19 @@ using namespace std;
 //    }
 //    nums.resize(count); // 最后统一 resize
 //}
-//
+//void removeSort(vector<int>& nums)
+//{
+//	if (nums.empty())
+//		return;
+//	sort(nums.begin(), nums.end());
+//	int count = 1;
+//	for (int i = 1; i < nums.size(); ++i)
+//	{
+//		if (nums[i] != nums[count - 1])
+//			nums[count++] = nums[i];
+//	}
+//	nums.resize(count);
+//}
 //int main()
 //{
 //    vector<int> nums{ 3, 3, 3, 34, 45, 45, 56, 56, 3, 2, 4, 5, 7 };
@@ -71,6 +83,33 @@ using namespace std;
 //	cout << LongString(s) << endl;
 //	return 0;
 //}
+//void Expan(string& s,int left,int right,int& start,int& maxlen)
+//{
+//	while (left >= 0 && right <= s.size() && s[left] == s[right])
+//	{
+//		left--;
+//		right++;
+//	}
+//	int len = right - left;
+//	if (len > maxlen)
+//	{
+//		maxlen = len;
+//		start = left + 1;
+//	}
+//}
+//string Huiwen(string s)
+//{
+//	if (s.empty())
+//		return "";
+//	int start = 0; int maxlen = 1;
+//	for (int i = 0; i < s.size(); i++)
+//	{
+//		Expan(s, i, i, start, maxlen);
+//		Expan(s, i, i+1, start, maxlen);
+//	}
+//	return s.substr(start, maxlen);
+//}
+
 //void BubleSort(vector<int>& nums)
 //{
 //	int size = nums.size();
@@ -752,28 +791,28 @@ string lengthoflongeststring(string s)
 //	}
 //};
 
-#include <vector>
-
-class Solution {
-public:
-	int singleNumber(std::vector<int>& nums) {
-		int result = 0;
-
-		// 遍历每一位（假设是32位整数）
-		for (int i = 0; i < 32; ++i) {
-			int sum = 0;
-
-			// 统计所有数字在第i位上的1的个数
-			for (int num : nums) {
-				sum += (num >> i) & 1;
-			}
-
-			// 如果模3不为0，说明只出现一次的数字在该位上是1
-			if (sum % 3 != 0) {
-				result |= (1 << i);
-			}
-		}
-
-		return result;
-	}
-};
+//#include <vector>
+//
+//class Solution {
+//public:
+//	int singleNumber(std::vector<int>& nums) {
+//		int result = 0;
+//
+//		// 遍历每一位（假设是32位整数）
+//		for (int i = 0; i < 32; ++i) {
+//			int sum = 0;
+//
+//			// 统计所有数字在第i位上的1的个数
+//			for (int num : nums) {
+//				sum += (num >> i) & 1;
+//			}
+//
+//			// 如果模3不为0，说明只出现一次的数字在该位上是1
+//			if (sum % 3 != 0) {
+//				result |= (1 << i);
+//			}
+//		}
+//
+//		return result;
+//	}
+//};
