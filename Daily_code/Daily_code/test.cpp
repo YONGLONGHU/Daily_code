@@ -816,3 +816,76 @@ string lengthoflongeststring(string s)
 //		return result;
 //	}
 //};
+
+//#include <iostream>
+//#include <string>
+//using namespace std;
+//
+//int firstUniqueChar(const string& s) {
+//	const int SIZE = 52;  // 26 uppercase + 26 lowercase
+//	int count[SIZE] = { 0 };
+//
+//	// 统计每个字符出现的次数
+//	for (char c : s) {
+//		int index;
+//		if (c >= 'A' && c <= 'Z') {
+//			index = c - 'A';           // A-Z -> 0~25
+//		}
+//		else {
+//			index = 26 + (c - 'a');    // a-z -> 26~51
+//		}
+//		count[index]++;
+//	}
+//
+//	// 再次遍历，找出第一个只出现一次的字符
+//	for (int i = 0; i < s.length(); i++) {
+//		int index;
+//		char c = s[i];
+//		if (c >= 'A' && c <= 'Z') {
+//			index = c - 'A';
+//		}
+//		else {
+//			index = 26 + (c - 'a');
+//		}
+//		if (count[index] == 1) {
+//			return i;
+//		}
+//	}
+//
+//	return -1;  // 没有只出现一次的字符
+//}
+//
+//int main() {
+//	string str;
+//	cout << "请输入字符串：";
+//	cin >> str;
+//
+//	int index = firstUniqueChar(str);
+//	if (index != -1) {
+//		cout << "第一个只出现一次的字符是：" << str[index] << endl;
+//		cout << "位置是：" << index << endl;
+//	}
+//	else {
+//		cout << "没有只出现一次的字符。" << endl;
+//	}
+//
+//	return 0;
+//}
+//void BubleSort(vector<int>& nums)
+//{
+//	int size = nums.size();
+//	for (int i = 0; i < size-1; ++i)
+//	{
+//		bool flag = false;
+//		for (int j = 0; i < size - i - 1; ++j)
+//		{
+//			if (nums[j] > nums[j + 1])
+//			{
+//				swap(nums[j], nums[j + 1]);
+//				flag = !flag;
+//			}
+//		}
+//		if (!flag)
+//			return;
+//	}
+//}
