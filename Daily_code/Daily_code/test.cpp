@@ -889,3 +889,14 @@ string lengthoflongeststring(string s)
 //			return;
 //	}
 //}
+
+template<class T>
+bool Less(T left, T right)
+{
+	return left < right;
+}
+template<>
+bool Less<int*>(int* left, int* right)
+{
+	return *left < *right;
+}
